@@ -8,7 +8,7 @@ import CSS.Common (center)
 import CSS.Overflow (hidden, overflow)
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
-import Data.Array (catMaybes, mapWithIndex, (:))
+import Data.Array (catMaybes, length, mapWithIndex, (:))
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (Tuple(..), uncurry)
 import Data.Tuple.Nested ((/\))
@@ -79,11 +79,11 @@ css =
 
 component :: forall q i o m. MonadEffect m => H.Component q i o m
 component = Hooks.component \_ _ -> Hooks.do
-  selection /\ selectionId <- useState 0
+  selection /\ selectionId <- useState $ Just 0
   accordion <- useAccordion
     (Accordion.defaultOptions Accordion.Single)
-      { value = Just $ Just selection
-      , onValueChange = Just $ Hooks.put selectionId <<< fromMaybe selection
+      { value = Just selection
+      , onValueChange = Just $ Hooks.put selectionId
       , renderTrigger = renderStepTrigger
       , renderPanel = renderStepPanel
       , renderHeading = renderStepHeading
