@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "spago build",
+    "bundle": "spago bundle-app -m PurescriPT.Site.Main --to ./temp/app.js --then \"spago run -m PurescriPT.Site.CSS -a '--to ./temp/app.css'\" --then \"cpy ./temp/* ./public\" --then \"rimraf ./temp\"",
+    "dev": "concurrently \"npm:bundle -- --watch\" \"live-server --no-browser public\"",
+    "format": "purs-tidy format-in-place src/**/*.purs",
+    "postinstall": "spago install"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "cpy-cli": "^3.1.1",
+    "live-server": "^1.2.1",
+    "purescript": "^0.14.5",
+    "purs-tidy": "^0.7.0",
+    "rimraf": "^3.0.2",
+    "spago": "^0.20.3"
+  }
+}
