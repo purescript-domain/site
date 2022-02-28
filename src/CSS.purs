@@ -14,6 +14,7 @@ import Node.FS.Async (writeTextFile)
 import Node.Process (argv)
 import PurescriPT.Site.App as App
 import PurescriPT.Site.Home as Home
+import PurescriPT.Site.Steps as Steps
 
 main :: Effect Unit
 main = do
@@ -27,4 +28,4 @@ main = do
     )
     $ renderedSheet
     $ render
-    $ App.css <> Home.css
+    $ App.css <> Home.css <> Steps.css
