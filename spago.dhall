@@ -6,6 +6,7 @@
   , "effect"
   , "either"
   , "exceptions"
+  , "foldable-traversable"
   , "halogen"
   , "halogen-css"
   , "halogen-headless"

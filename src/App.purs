@@ -45,7 +45,7 @@ css =
       star & byClass headingClass ? do
         position relative
         margin nil nil nil nil
-        uncurry fontFamily Theme.logoFont
+        uncurry fontFamily Theme.montserrat
         fontSize (rem 2.5)
         fontWeight normal
         textTransform uppercase
