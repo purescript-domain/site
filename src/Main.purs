@@ -1,4 +1,4 @@
-module PurescriPT.Site.Main where
+module Domains.Site.Main where
 
 import Prelude
 
@@ -9,8 +9,8 @@ import Halogen as H
 import Halogen.Aff (awaitBody, runHalogenAff)
 import Halogen.Subscription as HS
 import Halogen.VDom.Driver (runUI)
-import PurescriPT.Site.App as App
-import PurescriPT.Site.Route as Route
+import Domains.Site.App as App
+import Domains.Site.Route as Route
 import Routing.Hash (matchesWith)
 
 main :: Effect Unit

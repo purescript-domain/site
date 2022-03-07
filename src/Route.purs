@@ -1,4 +1,4 @@
-module PurescriPT.Site.Route where
+module Domains.Site.Route where
 
 import Prelude
 

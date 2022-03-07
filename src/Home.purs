@@ -1,4 +1,4 @@
-module PurescriPT.Site.Home where
+module Domains.Site.Home where
 
 import Prelude
 
@@ -10,7 +10,7 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
 import Halogen.Hooks as Hooks
-import PurescriPT.Site.Steps (useSteps)
+import Domains.Site.Steps (useSteps)
 
 rootClass = ClassName "home" :: ClassName
 

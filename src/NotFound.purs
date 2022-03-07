@@ -1,4 +1,4 @@
-module PurescriPT.Site.NotFound where
+module Domains.Site.NotFound where
 
 import Prelude
 

@@ -1,4 +1,4 @@
-module PurescriPT.Site.CSS where
+module Domains.Site.CSS where
 
 import Prelude
 
@@ -12,9 +12,9 @@ import Effect.Exception (throwException)
 import Node.Encoding (Encoding(..))
 import Node.FS.Async (writeTextFile)
 import Node.Process (argv)
-import PurescriPT.Site.App as App
-import PurescriPT.Site.Home as Home
-import PurescriPT.Site.Steps as Steps
+import Domains.Site.App as App
+import Domains.Site.Home as Home
+import Domains.Site.Steps as Steps
 
 main :: Effect Unit
 main = do

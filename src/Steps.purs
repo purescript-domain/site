@@ -1,8 +1,8 @@
-module PurescriPT.Site.Steps where
+module Domains.Site.Steps where
 
 import Prelude
 
-import CSS (StyleM, alignItems, backgroundColor, black, border, boxShadow, color, deg, display, element, em, flex, fontFamily, fontSize, fontStyle, height, hover, inlineBlock, lineHeight, margin, marginLeft, marginTop, ms, nil, opacity, outlineColor, outlineOffset, outlineStyle, outlineWidth, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, pct, pseudo, px, rem, rgba, rotate, solid, star, textTransform, transform, transitionDuration, transitionProperties, transitionProperty, white, width, (&), (?), (@-@), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, black, border, boxShadow, color, deg, display, element, em, flex, fontFamily, fontSize, fontStyle, height, hover, inlineBlock, lineHeight, margin, marginLeft, marginTop, nil, opacity, outlineColor, outlineOffset, outlineStyle, outlineWidth, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, pct, pseudo, px, rem, rgba, rotate, solid, star, textTransform, transform, transitionDuration, transitionProperties, transitionProperty, white, width, (&), (?), (@-@), (|+), (|>))
 import CSS as CSS
 import CSS.Box (bsColor, bsInset, shadowWithBlur, shadowWithSpread)
 import CSS.Common (center, hidden, normal)
@@ -32,7 +32,7 @@ import Halogen.Hooks as Hooks
 import Halogen.Svg.Attributes (CommandPositionReference(..), l, m)
 import Halogen.Svg.Attributes as HSA
 import Halogen.Svg.Elements as HSE
-import PurescriPT.Site.Theme as Theme
+import Domains.Site.Theme as Theme
 
 headingClass = ClassName "steps__heading" :: ClassName
 triggerClass = ClassName "steps__trigger" :: ClassName

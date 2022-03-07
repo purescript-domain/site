@@ -1,4 +1,4 @@
-{ name = "purescri-pt-site"
+{ name = "domains-site"
 , dependencies =
   [ "arrays"
   , "console"

@@ -1,4 +1,4 @@
-module PurescriPT.Site.Terms where
+module Domains.Site.Terms where
 
 import Prelude
 

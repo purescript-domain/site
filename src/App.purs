@@ -1,4 +1,4 @@
-module PurescriPT.Site.App where
+module Domains.Site.App where
 
 import Prelude
 
@@ -17,11 +17,11 @@ import Halogen (ClassName(..))
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
-import PurescriPT.Site.Home as Home
-import PurescriPT.Site.NotFound as NotFound
-import PurescriPT.Site.Route (Route(..))
-import PurescriPT.Site.Terms as Terms
-import PurescriPT.Site.Theme as Theme
+import Domains.Site.Home as Home
+import Domains.Site.NotFound as NotFound
+import Domains.Site.Route (Route(..))
+import Domains.Site.Terms as Terms
+import Domains.Site.Theme as Theme
 import Type.Prelude (Proxy(..))
 
 containerClass = ClassName "app__container" :: ClassName

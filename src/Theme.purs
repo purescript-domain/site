@@ -1,4 +1,4 @@
-module PurescriPT.Site.Theme where
+module Domains.Site.Theme where
 
 import CSS (Color, GenericFontFamily, rgb, sansSerif)
 import CSS.Font (monospace)

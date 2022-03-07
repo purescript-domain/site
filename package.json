@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "spago build",
-    "bundle": "spago bundle-app -m PurescriPT.Site.Main --to ./temp/app.js --then \"spago run -m PurescriPT.Site.CSS -a '--to ./temp/app.css'\" --then \"cpy ./temp/* ./public\" --then \"rimraf ./temp\"",
+    "bundle": "spago bundle-app -m Domains.Site.Main --to ./temp/app.js --then \"spago run -m Domains.Site.CSS -a '--to ./temp/app.css'\" --then \"cpy ./temp/* ./public\" --then \"rimraf ./temp\"",
     "dev": "concurrently \"npm:bundle -- --watch\" \"live-server --no-browser public\"",
     "format": "purs-tidy format-in-place src/**/*.purs",
     "postinstall": "spago install"
