@@ -20,6 +20,8 @@ import Data.NonEmpty (singleton)
 import Data.Traversable (for_)
 import Data.Tuple (Tuple(..), uncurry)
 import Data.Tuple.Nested ((/\))
+import Domains.Site.Prose (prose)
+import Domains.Site.Theme as Theme
 import Effect.Class (class MonadEffect)
 import Halogen (ClassName(..))
 import Halogen.HTML as HH
@@ -32,7 +34,6 @@ import Halogen.Hooks as Hooks
 import Halogen.Svg.Attributes (CommandPositionReference(..), l, m)
 import Halogen.Svg.Attributes as HSA
 import Halogen.Svg.Elements as HSE
-import Domains.Site.Theme as Theme
 
 headingClass = ClassName "steps__heading" :: ClassName
 triggerClass = ClassName "steps__trigger" :: ClassName
@@ -41,8 +42,6 @@ indicatorOpenClass = ClassName "steps__indicator--open" :: ClassName
 panelClass = ClassName "steps__panel" :: ClassName
 panelClosedClass = ClassName "steps__panel--closed" :: ClassName
 detailsClass = ClassName "steps__details" :: ClassName
-emClass = ClassName "steps__emphasis" :: ClassName
-codeClass = ClassName "steps__code" :: ClassName
 
 css :: StyleM Unit
 css =
@@ -84,8 +83,6 @@ css =
         color white
         transitionProperty "height"
         transitionDuration "250ms"
-        uncurry fontFamily Theme.roboto
-        lineHeight $ unitless 1.5
         boxShadow $ singleton $ bsInset $ bsColor (rgba 0 0 0 0.5) $ shadowWithBlur nil (em 0.125) (em 0.3125)
         element "a" ? do
           color Theme.gold
@@ -102,21 +99,12 @@ css =
           transform $ translateY $ em (-1.5)
       star & byClass detailsClass ? do
         let
-          paddingX = em 1.5 @-@ px 1.0
-          paddingY = em 0.75 @-@ px 1.0
+          paddingX = em 1.75 @-@ px 1.0
+          paddingY = em 1.25 @-@ px 1.0
         for_ [paddingRight, paddingLeft] (applyFlipped paddingX)
         for_ [paddingTop, paddingBottom] (applyFlipped paddingY)
         transitionProperties ["opacity", "visibility", "transform"]
         transitionDuration "250ms"
-        element "p" ? do
-          margin nil nil nil nil
-        element "p" |+ element "p" ? do
-          marginTop $ em 0.75
-      star & byClass emClass ? do
-        fontStyle normal
-        color Theme.gold
-      star & byClass codeClass ? do
-        uncurry fontFamily Theme.inconsolata
 
 useSteps :: forall m h p. MonadEffect m => Hook m (UseState (Maybe Int) <> UseAccordion Int <> h) (HH.HTML p (HookM m Unit))
 useSteps = Hooks.do
@@ -177,85 +165,107 @@ useSteps = Hooks.do
       content
 
   steps =
-    [ Tuple (HH.text "Step 1") $
-        HH.div_
-          [ HH.text "Set up your website on "
-          , HH.a
-            [ HP.href "https://pages.github.com/"
-            , HP.target "_blank"
-            ]
-            [ HH.text "GitHub Pages" ]
-          , HH.text ". If you're short on time, the "
-          , HH.a
-            [ HP.href "https://docs.github.com/en/pages/quickstart"
-            , HP.target "_blank"
-            ]
-            [HH.text "Quickstart"]
-          , HH.text """
-              can help you to get started authoring markdown content in your
-              browser and publishing it to your site in a few quick steps.
-            """
+    [ Tuple (HH.text "Step 1")
+        [ HH.text "Set up your website on "
+        , HH.a
+          [ HP.href "https://pages.github.com/"
+          , HP.target "_blank"
           ]
-    , Tuple (HH.text "Step 2") $ HH.div_
+          [ HH.text "GitHub Pages" ]
+        , HH.text ". If you're short on time, the "
+        , HH.a
+          [ HP.href "https://docs.github.com/en/pages/quickstart"
+          , HP.target "_blank"
+          ]
+          [HH.text "Quickstart"]
+        , HH.text """
+            can help you to get started authoring markdown content in your
+            browser and publishing it to your site in a few quick steps.
+          """
+        ]
+    , Tuple (HH.text "Step 2")
         [ HH.text "Choose the "
-        , HH.em [HP.class_ emClass] [HH.text "purescri.pt"]
+        , HH.em_ [HH.text "purescri.pt"]
         , HH.text
             """
               subdomain that matches your repository or user/organization name,
               omitting the
             """
-        , HH.em [ HP.class_ emClass ] [ HH.text "purescript- " ]
+        , HH.em_ [ HH.text "purescript- " ]
         , HH.text "prefix (if applicable). For example: "
         , HH.ul_
           [ HH.li_
               [ HH.text "User "
-              , HH.em [HP.class_ emClass] [HH.text "bdover "]
+              , HH.em_ [HH.text "bdover "]
               , HH.text "should use "
-              , HH.em [HP.class_ emClass] [HH.text "bdover.purescri.pt "]
+              , HH.em_ [HH.text "bdover.purescri.pt "]
               , HH.text "."
               ]
           , HH.li_
               [ HH.text "Organization "
-              , HH.em [HP.class_ emClass] [HH.text "purescript-contrib "]
+              , HH.em_ [HH.text "purescript-contrib "]
               , HH.text "should use "
-              , HH.em [HP.class_ emClass] [HH.text "contrib.purescri.pt "]
+              , HH.em_ [HH.text "contrib.purescri.pt "]
               , HH.text "."
               ]
           , HH.li_
               [ HH.text "Repository "
-              , HH.em [HP.class_ emClass] [HH.text "purescript-css "]
+              , HH.em_ [HH.text "purescript-css "]
               , HH.text "should use "
-              , HH.em [HP.class_ emClass] [HH.text "css.purescri.pt "]
+              , HH.em_ [HH.text "css.purescri.pt "]
               , HH.text "."
               ]
           ]
         ]
-    , Tuple (HH.text "Step 3") $
-        HH.div_
-          [ HH.p_
-            [ HH.text "Add a file called "
-            , HH.em [HP.classes [emClass, codeClass]] [HH.text "CNAME"]
-            , HH.text " alongside your website content, usually located in a "
-            , HH.em [HP.classes [emClass, codeClass]] [HH.text "gh-pages"]
-            , HH.text " branch and/or under the "
-            , HH.em [HP.classes [emClass, codeClass]] [HH.text "/docs"]
-            , HH.text " directory."
-            ]
-          , HH.p_
-            [ HH.text "The "
-            , HH.em [HP.classes [emClass, codeClass]] [HH.text "CNAME"]
-            , HH.text
-                """
-                  file should contain a single line consisting of your
-                  subdomain (including the
-                """
-            , HH.em [HP.classes [emClass]] [HH.text ".purescri.pt"]
-            , HH.text " part)."
-            ]
+    , Tuple (HH.text "Step 3")
+        [ HH.p_
+          [ HH.text "Add a file called "
+          , HH.em_ [HH.code_ [HH.text "CNAME"]]
+          , HH.text " alongside your website content, usually located in a "
+          , HH.em_ [HH.code_ [HH.text "gh-pages"]]
+          , HH.text " branch and/or under the "
+          , HH.em_ [HH.code_ [HH.text "/docs"]]
+          , HH.text " directory."
           ]
-    , Tuple (HH.text "Step 4") $ HH.text
-        """
-          Step 4 instructions coming soon
-        """
+        , HH.p_
+          [ HH.text "The "
+          , HH.em_ [HH.code_ [HH.text "CNAME"]]
+          , HH.text
+              """
+                file should contain a single line consisting of your
+                subdomain (including the
+              """
+          , HH.em_ [HH.code_ [HH.text ".purescri.pt"]]
+          , HH.text " part)."
+          ]
+        ]
+    , Tuple (HH.text "Step 4")
+        [ HH.p_
+          [ HH.text "Now it's time to register your domain by adding it to "
+          , HH.a
+            [HP.href "https://github.com/purescript-domains/dns/edit/main/domains.yml"] 
+            [HH.text "this list"]
+          , HH.text ". "
+          , HH.text
+              """
+                You can edit it right in your browser and then follow the
+                options at the bottom of the form to submit a pull request.
+              """
+          ]
+        , HH.p_
+          [ HH.text
+              """
+                Please keep an eye on your pull request in case we have any
+                questions. Otherwise, your registration will be processed
+                immediately once merged. Keep in mind that DNS changes may
+                take up to 24 hours to propagate fully.
+              """
+          ]
+        ]
     ]
-      # mapWithIndex \i (summary /\ details) -> i /\ summary /\ HH.div [ HP.class_ detailsClass ] [ details ]
+      # mapWithIndex
+          \i (summary /\ content) ->
+            i /\ summary
+              /\ HH.div
+                   [ HP.class_ detailsClass ]
+                   [ prose content ]
