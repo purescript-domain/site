@@ -13,16 +13,20 @@
   , "halogen-hooks"
   , "halogen-subscriptions"
   , "halogen-svg-elems"
+  , "markdown-it"
   , "maybe"
   , "node-buffer"
   , "node-fs"
   , "node-process"
+  , "nonbili-dom"
   , "nonempty"
   , "prelude"
   , "routing"
   , "routing-duplex"
+  , "transformers"
   , "tuples"
   , "typelevel-prelude"
+  , "web-html"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs" ]

@@ -8,20 +8,22 @@ import CSS.Common (auto, normal)
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
 import CSS.Transform (scale, translateY)
+import Control.Monad.Reader.Class (class MonadAsk)
 import Data.Array (find)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (uncurry)
 import Data.Tuple.Nested ((/\))
-import Effect.Class (class MonadEffect)
-import Halogen (ClassName(..))
-import Halogen as H
-import Halogen.HTML as HH
-import Halogen.HTML.Properties as HP
 import Domains.Site.Home as Home
 import Domains.Site.NotFound as NotFound
 import Domains.Site.Route (Route(..))
 import Domains.Site.Terms as Terms
 import Domains.Site.Theme as Theme
+import Effect.Class (class MonadEffect)
+import Halogen (ClassName(..))
+import Halogen as H
+import Halogen.HTML as HH
+import Halogen.HTML.Properties as HP
+import MarkdownIt (MarkdownIt)
 import Type.Prelude (Proxy(..))
 
 containerClass = ClassName "app__container" :: ClassName
@@ -63,7 +65,11 @@ type Slots = (main :: forall q. H.Slot q Void (Maybe Route))
 
 _main = Proxy :: Proxy "main"
 
-component :: forall i o m. MonadEffect m => H.Component Query i o m
+component
+  :: forall r i o m
+   . MonadAsk { markdownIt :: MarkdownIt | r } m
+  => MonadEffect m
+  => H.Component Query i o m
 component =
   H.mkComponent
     { initialState: const Nothing

@@ -2,15 +2,17 @@
   "private": true,
   "scripts": {
     "build": "spago build",
-    "bundle": "spago bundle-app -m Domains.Site.Main --to ./temp/app.js --then \"spago run -m Domains.Site.CSS -a '--to ./temp/app.css'\" --then \"cpy ./temp/* ./public\" --then \"rimraf ./temp\"",
+    "bundle": "spago bundle-app -m Domains.Site.Main --to ./temp/app.js --then \"spago run -m Domains.Site.CSS -a '--to ./temp/app.css'\" --then \"cpy ./temp/app.css ./public\" --then \"browserify ./temp/app.js -o ./public/app.js\" --then \"rimraf ./temp\"",
     "dev": "concurrently \"npm:bundle -- --watch\" \"live-server --no-browser public\"",
     "format": "purs-tidy format-in-place src/**/*.purs",
     "postinstall": "spago install"
   },
   "devDependencies": {
+    "browserify": "^17.0.0",
     "concurrently": "^7.0.0",
     "cpy-cli": "^3.1.1",
     "live-server": "^1.2.1",
+    "markdown-it": "^12.3.2",
     "purescript": "^0.14.5",
     "purs-tidy": "^0.7.0",
     "rimraf": "^3.0.2",

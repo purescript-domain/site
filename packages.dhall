@@ -11,3 +11,13 @@ in  upstream
     , repo = "https://github.com/nsaunders/purescript-halogen-headless.git"
     , version = "master"
     }
+  with markdown-it =
+    { dependencies = ["effect", "prelude", "options"]
+    , repo = "https://github.com/nonbili/purescript-markdown-it.git"
+    , version = "v0.5.0"
+    }
+  with nonbili-dom =
+    { dependencies = ["effect", "web-dom", "web-html"]
+    , repo = "https://github.com/nonbili/purescript-nonbili-dom.git"
+    , version = "v0.3.0"
+    }
