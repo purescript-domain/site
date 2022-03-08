@@ -2,7 +2,9 @@
   "private": true,
   "scripts": {
     "build": "spago build",
-    "bundle": "spago bundle-app -m Domains.Site.Main --to ./temp/app.js --then \"spago run -m Domains.Site.CSS -a '--to ./temp/app.css'\" --then \"cpy ./temp/app.css ./public\" --then \"browserify ./temp/app.js -o ./public/app.js\" --then \"rimraf ./temp\"",
+    "bundleCSS": "spago run -m Domains.Site.CSS -a \"--to ./build/app.css\"",
+    "bundleJS": "browserify ./build/temp.js -o ./build/app.js",
+    "bundle": "spago bundle-app -m Domains.Site.Main --to ./build/temp.js --then \"concurrently 'npm:bundleCSS' 'npm:bundleJS'\" --then 'cpy ./build/app.* ./public' --then 'rimraf build'",
     "dev": "concurrently \"npm:bundle -- --watch\" \"live-server --no-browser public\"",
     "format": "purs-tidy format-in-place src/**/*.purs",
     "postinstall": "spago install"
