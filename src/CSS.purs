@@ -14,7 +14,7 @@ import Node.FS.Async (writeTextFile)
 import Node.Process (argv)
 import Domains.Site.App as App
 import Domains.Site.Home as Home
-import Domains.Site.Prose as Prose
+import Domains.Site.Markdown as Prose
 import Domains.Site.Steps as Steps
 
 main :: Effect Unit

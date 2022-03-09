@@ -19,6 +19,7 @@ import Domains.Site.Route (Route(..))
 import Domains.Site.Terms as Terms
 import Domains.Site.Theme as Theme
 import Effect.Class (class MonadEffect)
+import Effect.Ref (Ref)
 import Halogen (ClassName(..))
 import Halogen as H
 import Halogen.HTML as HH
@@ -67,7 +68,7 @@ _main = Proxy :: Proxy "main"
 
 component
   :: forall r i o m
-   . MonadAsk { markdownIt :: MarkdownIt | r } m
+   . MonadAsk { markdownIt :: MarkdownIt, markdownRef :: Ref Int | r } m
   => MonadEffect m
   => H.Component Query i o m
 component =

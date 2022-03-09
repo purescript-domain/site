@@ -6,9 +6,9 @@ import CSS (StyleM, em, fontSize, marginTop, star, vh, (&), (?), (|+), (|>))
 import CSS as CSS
 import Control.Monad.Reader.Class (class MonadAsk)
 import Domains.Site.Markdown (useMarkdown)
-import Domains.Site.Prose (prose)
 import Domains.Site.Steps (useSteps)
 import Effect.Class (class MonadEffect)
+import Effect.Ref (Ref)
 import Halogen (ClassName(..))
 import Halogen as H
 import Halogen.HTML as HH
@@ -38,7 +38,7 @@ css =
 
 component
   :: forall r q i o m
-   . MonadAsk { markdownIt :: MarkdownIt | r } m
+   . MonadAsk { markdownIt :: MarkdownIt, markdownRef :: Ref Int | r } m
   => MonadEffect m
   => H.Component q i o m
 component = Hooks.component \_ _ -> Hooks.do
@@ -49,6 +49,6 @@ component = Hooks.component \_ _ -> Hooks.do
       [ HP.class_ rootClass ]
       [ HH.div
         [ HP.class_ introClass ]
-        [ prose [ intro ] ]
+        [ intro ]
       , steps
       ]

@@ -21,6 +21,7 @@
   , "nonbili-dom"
   , "nonempty"
   , "prelude"
+  , "refs"
   , "routing"
   , "routing-duplex"
   , "transformers"

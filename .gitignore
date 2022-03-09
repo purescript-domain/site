@@ -8,4 +8,5 @@
 /.purs*
 /.psa*
 /.spago
+/build
 /public/app.*

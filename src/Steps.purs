@@ -2,27 +2,29 @@ module Domains.Site.Steps where
 
 import Prelude
 
-import CSS (StyleM, alignItems, backgroundColor, black, border, boxShadow, color, deg, display, element, em, flex, fontFamily, fontSize, fontStyle, height, hover, inlineBlock, lineHeight, margin, marginLeft, marginTop, nil, opacity, outlineColor, outlineOffset, outlineStyle, outlineWidth, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, pct, pseudo, px, rem, rgba, rotate, solid, star, textTransform, transform, transitionDuration, transitionProperties, transitionProperty, white, width, (&), (?), (@-@), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, black, border, boxShadow, color, deg, display, element, em, flex, fontFamily, fontSize, height, hover, inlineBlock, lineHeight, margin, marginLeft, nil, opacity, outlineColor, outlineOffset, outlineStyle, outlineWidth, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, pct, pseudo, px, rem, rgba, rotate, solid, star, textTransform, transform, transitionDuration, transitionProperties, transitionProperty, white, width, (&), (?), (@-@), (|+), (|>))
 import CSS as CSS
 import CSS.Box (bsColor, bsInset, shadowWithBlur, shadowWithSpread)
-import CSS.Common (center, hidden, normal)
+import CSS.Common (center, hidden)
 import CSS.Display (visibility)
 import CSS.Overflow (overflow)
 import CSS.Overflow as Overflow
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
 import CSS.Transform (translateY)
+import Control.Monad.Reader.Class (class MonadAsk)
 import Data.Array (catMaybes, mapWithIndex, (:))
 import Data.Foldable (find)
 import Data.Function (applyFlipped)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.NonEmpty (singleton)
 import Data.Traversable (for_)
-import Data.Tuple (Tuple(..), uncurry)
+import Data.Tuple (uncurry)
 import Data.Tuple.Nested ((/\))
-import Domains.Site.Prose (prose)
+import Domains.Site.Markdown (UseMarkdown, useMarkdown)
 import Domains.Site.Theme as Theme
 import Effect.Class (class MonadEffect)
+import Effect.Ref (Ref)
 import Halogen (ClassName(..))
 import Halogen.HTML as HH
 import Halogen.HTML.CSS as HC
@@ -34,6 +36,43 @@ import Halogen.Hooks as Hooks
 import Halogen.Svg.Attributes (CommandPositionReference(..), l, m)
 import Halogen.Svg.Attributes as HSA
 import Halogen.Svg.Elements as HSE
+import MarkdownIt (MarkdownIt)
+
+step1Content = """
+Set up your website on [GitHub Pages](https://pages.github.com/). If you're
+short on time, the [Quickstart](https://docs.github.com/en/pages/quickstart) can
+help you to get started authoring markdown content in your browser and
+publishing it to your site in a few quick steps.
+""" :: String
+
+step2Content = """
+Choose the _purescri.pt_ subdomain that matches your repository or
+user/organization name, omitting the _purescript-_ prefix (if applicable). For
+example:
+
+* User _jhopper_ should use _jhopper.purescri.pt_.
+* Organization _purescript-contrib_ should use _contrib.purescri.pt_.
+* Repository _purescript-css_ should use _css.purescri.pt_.
+""" :: String
+
+step3Content = """
+Add a file called _`CNAME`_ alongside your website content, usually located in a
+_`gh-pages`_ branch and/or under the _`/docs`_ directory.
+
+The _`CNAME`_ file should contain a single line consisting of your subdomain
+(including the _`.purescri.pt`_ part).
+""" :: String
+
+step4Content = """
+Now it's time to register your domain by adding it to
+[this list](https://github.com/purescript-domains/dns/edit/main/domains.yml).
+You can edit the file right in your browser and then follow the options at the
+bottom of the form to submit a pull request.
+
+Please keep an eye on your pull request in case we have any questions.
+Otherwise, your registration will be processed immediately once merged. Keep in
+mind that DNS changes may take up to 24 hours to propagate.
+""" :: String
 
 headingClass = ClassName "steps__heading" :: ClassName
 triggerClass = ClassName "steps__trigger" :: ClassName
@@ -106,9 +145,37 @@ css =
         transitionProperties ["opacity", "visibility", "transform"]
         transitionDuration "250ms"
 
-useSteps :: forall m h p. MonadEffect m => Hook m (UseState (Maybe Int) <> UseAccordion Int <> h) (HH.HTML p (HookM m Unit))
+useSteps
+  :: forall r m h p
+   . MonadAsk { markdownIt :: MarkdownIt, markdownRef :: Ref Int | r } m
+  => MonadEffect m
+  => Hook
+       m
+       (UseMarkdown <> UseMarkdown <> UseMarkdown <> UseMarkdown <> UseState (Maybe Int) <> UseAccordion Int <> h)
+       (HH.HTML p (HookM m Unit))
 useSteps = Hooks.do
+
+  step1Markup <- useMarkdown step1Content
+  step2Markup <- useMarkdown step2Content
+  step3Markup <- useMarkdown step3Content
+  step4Markup <- useMarkdown step4Content
+
+  let
+    steps =
+      [ "Step 1" /\ step1Markup
+      , "Step 2" /\ step2Markup
+      , "Step 3" /\ step3Markup
+      , "Step 4" /\ step4Markup
+      ]
+        # mapWithIndex
+            \i (summary /\ content) ->
+              i /\ HH.text summary
+                /\ HH.div
+                     [ HP.class_ detailsClass ]
+                     [ content ]
+
   selection /\ selectionId <- useState $ Just 0
+
   accordion <- useAccordion
     (Accordion.defaultOptions Accordion.Single)
       { value = Just selection
@@ -163,109 +230,3 @@ useSteps = Hooks.do
         <> props
       )
       content
-
-  steps =
-    [ Tuple (HH.text "Step 1")
-        [ HH.text "Set up your website on "
-        , HH.a
-          [ HP.href "https://pages.github.com/"
-          , HP.target "_blank"
-          ]
-          [ HH.text "GitHub Pages" ]
-        , HH.text ". If you're short on time, the "
-        , HH.a
-          [ HP.href "https://docs.github.com/en/pages/quickstart"
-          , HP.target "_blank"
-          ]
-          [HH.text "Quickstart"]
-        , HH.text """
-            can help you to get started authoring markdown content in your
-            browser and publishing it to your site in a few quick steps.
-          """
-        ]
-    , Tuple (HH.text "Step 2")
-        [ HH.text "Choose the "
-        , HH.em_ [HH.text "purescri.pt"]
-        , HH.text
-            """
-              subdomain that matches your repository or user/organization name,
-              omitting the
-            """
-        , HH.em_ [ HH.text "purescript- " ]
-        , HH.text "prefix (if applicable). For example: "
-        , HH.ul_
-          [ HH.li_
-              [ HH.text "User "
-              , HH.em_ [HH.text "bdover "]
-              , HH.text "should use "
-              , HH.em_ [HH.text "bdover.purescri.pt "]
-              , HH.text "."
-              ]
-          , HH.li_
-              [ HH.text "Organization "
-              , HH.em_ [HH.text "purescript-contrib "]
-              , HH.text "should use "
-              , HH.em_ [HH.text "contrib.purescri.pt "]
-              , HH.text "."
-              ]
-          , HH.li_
-              [ HH.text "Repository "
-              , HH.em_ [HH.text "purescript-css "]
-              , HH.text "should use "
-              , HH.em_ [HH.text "css.purescri.pt "]
-              , HH.text "."
-              ]
-          ]
-        ]
-    , Tuple (HH.text "Step 3")
-        [ HH.p_
-          [ HH.text "Add a file called "
-          , HH.em_ [HH.code_ [HH.text "CNAME"]]
-          , HH.text " alongside your website content, usually located in a "
-          , HH.em_ [HH.code_ [HH.text "gh-pages"]]
-          , HH.text " branch and/or under the "
-          , HH.em_ [HH.code_ [HH.text "/docs"]]
-          , HH.text " directory."
-          ]
-        , HH.p_
-          [ HH.text "The "
-          , HH.em_ [HH.code_ [HH.text "CNAME"]]
-          , HH.text
-              """
-                file should contain a single line consisting of your
-                subdomain (including the
-              """
-          , HH.em_ [HH.code_ [HH.text ".purescri.pt"]]
-          , HH.text " part)."
-          ]
-        ]
-    , Tuple (HH.text "Step 4")
-        [ HH.p_
-          [ HH.text "Now it's time to register your domain by adding it to "
-          , HH.a
-            [HP.href "https://github.com/purescript-domains/dns/edit/main/domains.yml"] 
-            [HH.text "this list"]
-          , HH.text ". "
-          , HH.text
-              """
-                You can edit it right in your browser and then follow the
-                options at the bottom of the form to submit a pull request.
-              """
-          ]
-        , HH.p_
-          [ HH.text
-              """
-                Please keep an eye on your pull request in case we have any
-                questions. Otherwise, your registration will be processed
-                immediately once merged. Keep in mind that DNS changes may
-                take up to 24 hours to propagate fully.
-              """
-          ]
-        ]
-    ]
-      # mapWithIndex
-          \i (summary /\ content) ->
-            i /\ summary
-              /\ HH.div
-                   [ HP.class_ detailsClass ]
-                   [ prose content ]
