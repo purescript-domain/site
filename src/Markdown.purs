@@ -31,19 +31,20 @@ css :: StyleM Unit
 css =
   let
     byClass (ClassName c) = CSS.byClass c
-  in do
-    star & byClass rootClass ? do
-      uncurry fontFamily Theme.roboto
-      lineHeight $ unitless 1.5
-      element "em" ? do
-        fontStyle normal
-        color Theme.gold
-      element "code" ? do
-        uncurry fontFamily Theme.inconsolata
-    (star & byClass rootClass) |> star ? do
-      margin nil nil nil nil
-    ((star & byClass rootClass) |> star) |+ star ? do
-      marginTop $ em 0.75
+  in
+    do
+      star & byClass rootClass ? do
+        uncurry fontFamily Theme.roboto
+        lineHeight $ unitless 1.5
+        element "em" ? do
+          fontStyle normal
+          color Theme.gold
+        element "code" ? do
+          uncurry fontFamily Theme.inconsolata
+      (star & byClass rootClass) |> star ? do
+        margin nil nil nil nil
+      ((star & byClass rootClass) |> star) |+ star ? do
+        marginTop $ em 0.75
 
 foreign import data UseMarkdown :: HookType
 
@@ -70,7 +71,8 @@ useMarkdown md =
 
       Hooks.captures
         { md, containerRef }
-        useTickEffect do
+        useTickEffect
+        do
           case containerRef of
             Just containerRef' -> do
               markdownIt <- asks _.markdownIt
@@ -88,4 +90,4 @@ useMarkdown md =
           Nothing ->
             HH.div_ []
           Just containerRef' ->
-            HH.div [HP.ref containerRef', HP.class_ rootClass] []
+            HH.div [ HP.ref containerRef', HP.class_ rootClass ] []

@@ -17,7 +17,8 @@ import Halogen.Hooks as Hooks
 import MarkdownIt (MarkdownIt)
 
 introContent :: String
-introContent = """
+introContent =
+  """
 PureScript Domains offers free domain names for open-source projects and
 community members. Register your name in a few simple steps.
 """
@@ -48,7 +49,7 @@ component = Hooks.component \_ _ -> Hooks.do
     HH.div
       [ HP.class_ rootClass ]
       [ HH.div
-        [ HP.class_ introClass ]
-        [ intro ]
+          [ HP.class_ introClass ]
+          [ intro ]
       , steps
       ]

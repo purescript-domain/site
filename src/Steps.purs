@@ -38,14 +38,16 @@ import Halogen.Svg.Attributes as HSA
 import Halogen.Svg.Elements as HSE
 import MarkdownIt (MarkdownIt)
 
-step1Content = """
+step1Content =
+  """
 Set up your website on [GitHub Pages](https://pages.github.com/). If you're
 short on time, the [Quickstart](https://docs.github.com/en/pages/quickstart) can
 help you to get started authoring markdown content in your browser and
 publishing it to your site in a few quick steps.
 """ :: String
 
-step2Content = """
+step2Content =
+  """
 Choose the _purescri.pt_ subdomain that matches your repository or
 user/organization name, omitting the _purescript-_ prefix (if applicable). For
 example:
@@ -55,7 +57,8 @@ example:
 * Repository _purescript-css_ should use _css.purescri.pt_.
 """ :: String
 
-step3Content = """
+step3Content =
+  """
 Add a file called _`CNAME`_ alongside your website content, usually located in a
 _`gh-pages`_ branch and/or under the _`/docs`_ directory.
 
@@ -63,7 +66,8 @@ The _`CNAME`_ file should contain a single line consisting of your subdomain
 (including the _`.purescri.pt`_ part).
 """ :: String
 
-step4Content = """
+step4Content =
+  """
 Now it's time to register your domain by adding it to
 [this list](https://github.com/purescript-domains/dns/edit/main/domains.yml).
 You can edit the file right in your browser and then follow the options at the
@@ -140,9 +144,9 @@ css =
         let
           paddingX = em 1.75 @-@ px 1.0
           paddingY = em 1.25 @-@ px 1.0
-        for_ [paddingRight, paddingLeft] (applyFlipped paddingX)
-        for_ [paddingTop, paddingBottom] (applyFlipped paddingY)
-        transitionProperties ["opacity", "visibility", "transform"]
+        for_ [ paddingRight, paddingLeft ] (applyFlipped paddingX)
+        for_ [ paddingTop, paddingBottom ] (applyFlipped paddingY)
+        transitionProperties [ "opacity", "visibility", "transform" ]
         transitionDuration "250ms"
 
 useSteps
@@ -171,8 +175,8 @@ useSteps = Hooks.do
             \i (summary /\ content) ->
               i /\ HH.text summary
                 /\ HH.div
-                     [ HP.class_ detailsClass ]
-                     [ content ]
+                  [ HP.class_ detailsClass ]
+                  [ content ]
 
   selection /\ selectionId <- useState $ Just 0
 
@@ -224,9 +228,9 @@ useSteps = Hooks.do
 
   renderPanel { open, targetHeight } props content =
     HH.div
-      ( [ HP.classes $ catMaybes [pure panelClass, find (not <<< const open) $ Just panelClosedClass]
+      ( [ HP.classes $ catMaybes [ pure panelClass, find (not <<< const open) $ Just panelClosedClass ]
         , HC.style $ fromMaybe (pure unit) $ height <<< px <$> targetHeight
         ]
-        <> props
+          <> props
       )
       content
