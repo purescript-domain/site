@@ -2,7 +2,7 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, backgroundColor, color, display, em, fontFamily, fontSize, fontWeight, inlineBlock, lineHeight, margin, marginBottom, marginLeft, marginRight, maxWidth, nil, position, px, relative, rem, star, textTransform, transforms, vh, white, (&), (?))
+import CSS (StyleM, backgroundColor, color, display, em, fontFamily, fontSize, fontWeight, inlineBlock, lineHeight, margin, marginBottom, marginLeft, marginRight, maxWidth, nil, noneTextDecoration, position, px, relative, rem, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?))
 import CSS as CSS
 import CSS.Common (auto, normal)
 import CSS.Size (unitless)
@@ -16,6 +16,7 @@ import Data.Tuple.Nested ((/\))
 import Domains.Site.Home as Home
 import Domains.Site.NotFound as NotFound
 import Domains.Site.Route (Route(..))
+import Domains.Site.Route as Route
 import Domains.Site.Terms as Terms
 import Domains.Site.Theme as Theme
 import Effect.Class (class MonadEffect)
@@ -29,6 +30,7 @@ import Type.Prelude (Proxy(..))
 
 containerClass = ClassName "app__container" :: ClassName
 headerClass = ClassName "app__header" :: ClassName
+headingLinkClass = ClassName "app__heading-link" :: ClassName
 headingClass = ClassName "app__heading" :: ClassName
 dotClass = ClassName "app__dot" :: ClassName
 
@@ -39,12 +41,16 @@ css =
   in
     do
       star & byClass containerClass ? do
+        width $ vw 96.0
         maxWidth $ px 740.0
         margin (vh 8.0) auto (vh 8.0) auto
         backgroundColor Theme.darkGray
         color white
       star & byClass headerClass ? do
         marginBottom $ vh 4.0
+      star & byClass headingLinkClass ? do
+        textDecoration noneTextDecoration
+        color white
       star & byClass headingClass ? do
         position relative
         margin nil nil nil nil
@@ -91,13 +97,19 @@ component =
       [ HP.class_ containerClass ]
       [ HH.header
           [ HP.class_ headerClass ]
-          [ HH.h1
-              [ HP.class_ headingClass ]
-              [ HH.text "purescri"
-              , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
-              , HH.text "pt"
+          let
+            logo =
+              [ HH.h1
+                  [ HP.class_ headingClass ]
+                  [ HH.text "purescri"
+                  , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
+                  , HH.text "pt"
+                  ]
               ]
-          ]
+          in
+            case route of
+              Just Home -> logo
+              _ -> [HH.a [HP.href $ Route.print Home, HP.class_ headingLinkClass] logo]
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]

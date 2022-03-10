@@ -13,6 +13,7 @@
   , "halogen-hooks"
   , "halogen-subscriptions"
   , "halogen-svg-elems"
+  , "js-timers"
   , "markdown-it"
   , "maybe"
   , "node-buffer"

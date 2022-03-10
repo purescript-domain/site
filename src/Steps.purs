@@ -23,16 +23,18 @@ import Data.Tuple (uncurry)
 import Data.Tuple.Nested ((/\))
 import Domains.Site.Markdown (UseMarkdown, useMarkdown)
 import Domains.Site.Theme as Theme
-import Effect.Class (class MonadEffect)
+import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Ref (Ref)
+import Effect.Timer (clearTimeout, setTimeout)
 import Halogen (ClassName(..))
 import Halogen.HTML as HH
 import Halogen.HTML.CSS as HC
 import Halogen.HTML.Properties as HP
 import Halogen.Headless.Accordion (UseAccordion, useAccordion)
 import Halogen.Headless.Accordion as Accordion
-import Halogen.Hooks (type (<>), Hook, HookM, UseState, useState)
+import Halogen.Hooks (type (<>), Hook, HookM, UseEffect, UseState, useLifecycleEffect, useState)
 import Halogen.Hooks as Hooks
+import Halogen.Subscription as HS
 import Halogen.Svg.Attributes (CommandPositionReference(..), l, m)
 import Halogen.Svg.Attributes as HSA
 import Halogen.Svg.Elements as HSE
@@ -83,6 +85,7 @@ triggerClass = ClassName "steps__trigger" :: ClassName
 indicatorClass = ClassName "steps__indicator" :: ClassName
 indicatorOpenClass = ClassName "steps__indicator--open" :: ClassName
 panelClass = ClassName "steps__panel" :: ClassName
+panelTransitionClass = ClassName "steps__panel--transition" :: ClassName
 panelClosedClass = ClassName "steps__panel--closed" :: ClassName
 detailsClass = ClassName "steps__details" :: ClassName
 
@@ -124,8 +127,6 @@ css =
         overflow Overflow.hidden
         backgroundColor Theme.darkerGray
         color white
-        transitionProperty "height"
-        transitionDuration "250ms"
         boxShadow $ singleton $ bsInset $ bsColor (rgba 0 0 0 0.5) $ shadowWithBlur nil (em 0.125) (em 0.3125)
         element "a" ? do
           color Theme.gold
@@ -135,6 +136,9 @@ css =
           outlineStyle solid
         element "a" & pseudo "focus" ? do
           outlineWidth $ px 1.0
+      star & byClass panelTransitionClass ? do
+        transitionProperty "height"
+        transitionDuration "250ms"
       star & byClass panelClosedClass ? do
         star & byClass detailsClass ? do
           opacity 0.0
@@ -155,9 +159,18 @@ useSteps
   => MonadEffect m
   => Hook
        m
-       (UseMarkdown <> UseMarkdown <> UseMarkdown <> UseMarkdown <> UseState (Maybe Int) <> UseAccordion Int <> h)
+       (UseState Boolean <> UseEffect <> UseMarkdown <> UseMarkdown <> UseMarkdown <> UseMarkdown <> UseState (Maybe Int) <> UseAccordion Int <> h)
        (HH.HTML p (HookM m Unit))
 useSteps = Hooks.do
+  transitionsEnabled /\ transitionsEnabledId <- useState false
+
+  useLifecycleEffect do
+    { emitter, listener } <- liftEffect HS.create
+    timeout <- liftEffect $ setTimeout 0 $ HS.notify listener $ Hooks.put transitionsEnabledId true
+    subscriptionId <- Hooks.subscribe emitter
+    pure $ Just do
+      liftEffect $ clearTimeout timeout
+      Hooks.unsubscribe subscriptionId
 
   step1Markup <- useMarkdown step1Content
   step2Markup <- useMarkdown step2Content
@@ -185,7 +198,7 @@ useSteps = Hooks.do
       { value = Just selection
       , onValueChange = Just $ Hooks.put selectionId
       , renderTrigger = renderTrigger
-      , renderPanel = renderPanel
+      , renderPanel = renderPanel transitionsEnabled
       , renderHeading = renderHeading
       }
     steps
@@ -226,9 +239,14 @@ useSteps = Hooks.do
       , HH.span_ content
       ]
 
-  renderPanel { open, targetHeight } props content =
+  renderPanel transitionsEnabled { open, targetHeight } props content =
     HH.div
-      ( [ HP.classes $ catMaybes [ pure panelClass, find (not <<< const open) $ Just panelClosedClass ]
+      ( [ HP.classes $
+            catMaybes
+              [ pure panelClass
+              , find (const transitionsEnabled) $ Just panelTransitionClass
+              , find (not <<< const open) $ Just panelClosedClass
+              ]
         , HC.style $ fromMaybe (pure unit) $ height <<< px <$> targetHeight
         ]
           <> props

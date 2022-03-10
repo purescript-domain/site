@@ -41,6 +41,8 @@ css =
           color Theme.gold
         element "code" ? do
           uncurry fontFamily Theme.inconsolata
+        element "a" ? do
+          color Theme.gold
       (star & byClass rootClass) |> star ? do
         margin nil nil nil nil
       ((star & byClass rootClass) |> star) |+ star ? do
