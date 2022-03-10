@@ -2,7 +2,7 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, backgroundColor, color, display, em, fontFamily, fontSize, fontWeight, inlineBlock, lineHeight, margin, marginBottom, marginLeft, marginRight, maxWidth, nil, noneTextDecoration, position, px, relative, rem, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?))
+import CSS (StyleM, backgroundColor, color, display, element, em, flex, fontFamily, fontSize, fontWeight, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, rem, spaceBetween, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?), (|>), (|+))
 import CSS as CSS
 import CSS.Common (auto, normal)
 import CSS.Size (unitless)
@@ -33,6 +33,7 @@ headerClass = ClassName "app__header" :: ClassName
 headingLinkClass = ClassName "app__heading-link" :: ClassName
 headingClass = ClassName "app__heading" :: ClassName
 dotClass = ClassName "app__dot" :: ClassName
+footerClass = ClassName "app__footer" :: ClassName
 
 css :: StyleM Unit
 css =
@@ -46,8 +47,8 @@ css =
         margin (vh 8.0) auto (vh 8.0) auto
         backgroundColor Theme.darkGray
         color white
-      star & byClass headerClass ? do
-        marginBottom $ vh 4.0
+      ((star & byClass containerClass) |> star) |+ star ? do
+        marginTop $ vh 4.0
       star & byClass headingLinkClass ? do
         textDecoration noneTextDecoration
         color white
@@ -65,6 +66,13 @@ css =
         marginRight $ em 0.125
         marginLeft $ em 0.125
         color Theme.gold
+      star & byClass footerClass ? do
+        display flex
+        justifyContent spaceBetween
+        uncurry fontFamily Theme.roboto
+        fontSize $ em 0.75
+        element "a" ? do
+          color Theme.gold
 
 data Query a = Navigate (Maybe Route) a
 
@@ -113,6 +121,13 @@ component =
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]
+      , HH.footer
+        [ HP.class_ footerClass ]
+        [ HH.div_ [HH.text "Copyright © 2022 PureScript Domains"]
+        , case route of
+            Just Terms -> HH.div_ []
+            _ -> HH.a [HP.href $ "#" <> Route.print Terms] [HH.text "Terms and Conditions"]
+        ]
       ]
 
     where
