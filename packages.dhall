@@ -6,8 +6,26 @@ in  upstream
   with css.version = "main"
   with halogen-headless =
     { dependencies =
-        ( https://raw.githubusercontent.com/nsaunders/purescript-halogen-headless/master/spago.dhall sha256:977fb4952630c4427a5592561a5aeab07db69b98ec6218e18cd0b277570ad005
-        ).dependencies
+      [ "arrays"
+      , "dom-indexed"
+      , "effect"
+      , "foldable-traversable"
+      , "halogen"
+      , "halogen-hooks"
+      , "halogen-subscriptions"
+      , "maybe"
+      , "prelude"
+      , "record"
+      , "strings"
+      , "tuples"
+      , "typelevel-prelude"
+      , "unfoldable"
+      , "web-dom"
+      , "web-events"
+      , "web-html"
+      , "web-resize-observer"
+      , "web-uievents"
+      ]
     , repo = "https://github.com/nsaunders/purescript-halogen-headless.git"
     , version = "master"
     }
