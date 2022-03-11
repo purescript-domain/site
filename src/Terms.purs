@@ -8,7 +8,8 @@ import Halogen as H
 import Halogen.Hooks as Hooks
 import MarkdownIt (MarkdownIt)
 
-terms = """
+terms =
+  """
 ## Terms and Conditions
 
 ### Introduction

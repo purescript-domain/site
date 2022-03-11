@@ -121,24 +121,24 @@ component =
           in
             case route of
               Just Home -> logo
-              _ -> [HH.a [HP.href $ Route.print Home, HP.class_ headingLinkClass] logo]
+              _ -> [ HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] logo ]
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]
       , HH.footer
-        [ HP.class_ footerClass ]
-        [ HH.div_ [HH.text "Copyright © 2022 PureScript Domains"]
-        , HH.div
-          [ HP.class_ footerLinksClass ] $
-          (filter (const $ route /= Just Terms) [HH.a [HP.href $ "#" <> Route.print Terms] [HH.text "Terms and Conditions"]]) <>
-          [ HH.a
-            [HP.href "https://github.com/purescript-domains", HP.target "_blank"]
-            [HH.text "GitHub"]
-          , HH.a
-            [HP.href "https://twitter.com/pursdomains", HP.target "_blank"]
-            [HH.text "Twitter"]
+          [ HP.class_ footerClass ]
+          [ HH.div_ [ HH.text "Copyright © 2022 PureScript Domains" ]
+          , HH.div
+              [ HP.class_ footerLinksClass ] $
+              (filter (const $ route /= Just Terms) [ HH.a [ HP.href $ "#" <> Route.print Terms ] [ HH.text "Terms and Conditions" ] ]) <>
+                [ HH.a
+                    [ HP.href "https://github.com/purescript-domains", HP.target "_blank" ]
+                    [ HH.text "GitHub" ]
+                , HH.a
+                    [ HP.href "https://twitter.com/pursdomains", HP.target "_blank" ]
+                    [ HH.text "Twitter" ]
+                ]
           ]
-        ]
       ]
 
     where
