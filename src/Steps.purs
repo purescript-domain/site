@@ -2,7 +2,7 @@ module Domains.Site.Steps where
 
 import Prelude
 
-import CSS (StyleM, alignItems, backgroundColor, black, border, boxShadow, color, deg, display, element, em, flex, fontFamily, fontSize, height, hover, inlineBlock, lineHeight, margin, marginLeft, nil, opacity, outlineColor, outlineOffset, outlineStyle, outlineWidth, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, pct, pseudo, px, rem, rgba, rotate, solid, star, textTransform, transform, transitionDuration, transitionProperties, transitionProperty, white, width, (&), (?), (@-@), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, black, border, boxShadow, color, deg, display, element, em, flex, fontFamily, fontSize, height, hover, inlineBlock, lineHeight, margin, marginLeft, nil, opacity, outline, outlineColor, outlineOffset, outlineStyle, outlineWidth, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, pct, pseudo, px, rem, rgba, rotate, solid, star, textTransform, transform, transitionDuration, transitionProperties, transitionProperty, white, width, (&), (?), (@-@), (|+), (|>))
 import CSS as CSS
 import CSS.Box (bsColor, bsInset, shadowWithBlur, shadowWithSpread)
 import CSS.Common (center, hidden)
@@ -110,7 +110,7 @@ css =
         backgroundColor black
         color white
         padding (em 0.75) (em 0.75) (em 0.75) (em 0.75)
-        outlineWidth nil
+        outline solid nil black
       (star & byClass triggerClass) & pseudo "focus" ? do
         boxShadow $ singleton $ bsColor Theme.gold $ bsInset $ shadowWithSpread nil nil nil $ px 1.0
       (star & byClass triggerClass) & hover ? do

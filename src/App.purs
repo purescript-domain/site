@@ -2,9 +2,9 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, backgroundColor, color, display, element, em, flex, fontFamily, fontSize, fontWeight, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, rem, spaceBetween, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, color, display, element, em, flex, flexBasis, fontFamily, fontSize, fontWeight, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, pct, position, pseudo, px, relative, rem, spaceBetween, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?), (|+), (|>))
 import CSS as CSS
-import CSS.Common (auto, normal)
+import CSS.Common (auto, center, normal)
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
 import CSS.Transform (scale, translateY)
@@ -17,6 +17,7 @@ import Domains.Site.Home as Home
 import Domains.Site.NotFound as NotFound
 import Domains.Site.Route (Route(..))
 import Domains.Site.Route as Route
+import Domains.Site.SupportButton (supportButton)
 import Domains.Site.Terms as Terms
 import Domains.Site.Theme as Theme
 import Effect.Class (class MonadEffect)
@@ -50,6 +51,13 @@ css =
         color white
       ((star & byClass containerClass) |> star) |+ star ? do
         marginTop $ vh 4.0
+      star & byClass headerClass ? do
+        display flex
+        alignItems center
+      ((star & byClass headerClass) |> star) |+ star ? do
+        marginLeft $ em 0.5
+      ((star & byClass headerClass) |> star) & pseudo "first-child" ? do
+        flexBasis $ pct 100.0
       star & byClass headingLinkClass ? do
         textDecoration noneTextDecoration
         color white
@@ -108,20 +116,35 @@ component =
     HH.div
       [ HP.class_ containerClass ]
       [ HH.header
-          [ HP.class_ headerClass ]
-          let
-            logo =
-              [ HH.h1
+          [ HP.class_ headerClass ] $
+          [ let
+              logo =
+                HH.h1
                   [ HP.class_ headingClass ]
                   [ HH.text "purescri"
                   , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
                   , HH.text "pt"
                   ]
+            in
+              case route of
+                Just Home -> logo
+                _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [logo]
+          ] <>
+            ((\x -> HH.div_ [x]) <$>
+              [ supportButton
+                  "https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt"
+                  "./twitter.svg"
+                  "Share"
+              , supportButton
+                  "https://github.com/purescript-domains/dns"
+                  "./github.svg"
+                  "Star"
+              , supportButton
+                  "https://github.com/sponsors/purescript-domains"
+                  "./sponsor.svg"
+                  "Sponsor"
               ]
-          in
-            case route of
-              Just Home -> logo
-              _ -> [ HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] logo ]
+            )
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]

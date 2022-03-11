@@ -16,6 +16,7 @@ import Domains.Site.App as App
 import Domains.Site.Home as Home
 import Domains.Site.Markdown as Prose
 import Domains.Site.Steps as Steps
+import Domains.Site.SupportButton as SupportButton
 
 main :: Effect Unit
 main = do
@@ -29,4 +30,4 @@ main = do
     )
     $ renderedSheet
     $ render
-    $ App.css <> Home.css <> Prose.css <> Steps.css
+    $ App.css <> Home.css <> Prose.css <> Steps.css <> SupportButton.css
