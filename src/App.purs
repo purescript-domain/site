@@ -2,7 +2,7 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, alignItems, backgroundColor, color, display, element, em, flex, flexBasis, fontFamily, fontSize, fontWeight, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, pct, position, pseudo, px, relative, rem, spaceBetween, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, color, display, element, em, flex, flexBasis, flexWrap, fontFamily, fontSize, fontWeight, height, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, pct, position, pseudo, px, relative, spaceBetween, star, textDecoration, textTransform, textWhitespace, transforms, vh, vw, white, whitespaceNoWrap, width, wrap, (&), (?), (|+), (|>))
 import CSS as CSS
 import CSS.Common (auto, center, normal)
 import CSS.Size (unitless)
@@ -36,6 +36,7 @@ headingClass = ClassName "app__heading" :: ClassName
 dotClass = ClassName "app__dot" :: ClassName
 footerClass = ClassName "app__footer" :: ClassName
 footerLinksClass = ClassName "app__footer-links" :: ClassName
+supportButtonsClass = ClassName "app__support-button" :: ClassName
 
 css :: StyleM Unit
 css =
@@ -54,18 +55,18 @@ css =
       star & byClass headerClass ? do
         display flex
         alignItems center
-      ((star & byClass headerClass) |> star) |+ star ? do
-        marginLeft $ em 0.5
-      ((star & byClass headerClass) |> star) & pseudo "first-child" ? do
-        flexBasis $ pct 100.0
+        justifyContent spaceBetween
+        flexWrap wrap
+      (star & byClass headerClass) |> star ? do
+        textWhitespace whitespaceNoWrap
       star & byClass headingLinkClass ? do
         textDecoration noneTextDecoration
         color white
       star & byClass headingClass ? do
         position relative
-        margin nil nil nil nil
+        margin nil (em 0.5) nil nil
         uncurry fontFamily Theme.montserrat
-        fontSize (rem 2.5)
+        fontSize $ em 2.5
         fontWeight normal
         textTransform uppercase
         lineHeight $ unitless 1.0
@@ -75,6 +76,12 @@ css =
         marginRight $ em 0.125
         marginLeft $ em 0.125
         color Theme.gold
+      star & byClass supportButtonsClass ? do
+        height $ em 2.5
+        display flex
+        alignItems center
+      ((star & byClass supportButtonsClass) |> star) |+ star ? do
+        marginLeft $ em 0.5
       star & byClass footerClass ? do
         display flex
         justifyContent spaceBetween
@@ -129,8 +136,9 @@ component =
               case route of
                 Just Home -> logo
                 _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [logo]
-          ] <>
-            ((\x -> HH.div_ [x]) <$>
+          , HH.div
+            [HP.class_ supportButtonsClass] $
+            (\x -> HH.div_ [x]) <$>
               [ supportButton
                   "https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt"
                   "./twitter.svg"
@@ -144,7 +152,7 @@ component =
                   "./sponsor.svg"
                   "Sponsor"
               ]
-            )
+          ]
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]
