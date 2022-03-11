@@ -2,14 +2,14 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, backgroundColor, color, display, element, em, flex, fontFamily, fontSize, fontWeight, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, rem, spaceBetween, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?), (|>), (|+))
+import CSS (StyleM, backgroundColor, color, display, element, em, flex, fontFamily, fontSize, fontWeight, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, rem, spaceBetween, star, textDecoration, textTransform, transforms, vh, vw, white, width, (&), (?), (|+), (|>))
 import CSS as CSS
 import CSS.Common (auto, normal)
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
 import CSS.Transform (scale, translateY)
 import Control.Monad.Reader.Class (class MonadAsk)
-import Data.Array (find)
+import Data.Array (filter, find)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (uncurry)
 import Data.Tuple.Nested ((/\))
@@ -34,6 +34,7 @@ headingLinkClass = ClassName "app__heading-link" :: ClassName
 headingClass = ClassName "app__heading" :: ClassName
 dotClass = ClassName "app__dot" :: ClassName
 footerClass = ClassName "app__footer" :: ClassName
+footerLinksClass = ClassName "app__footer-links" :: ClassName
 
 css :: StyleM Unit
 css =
@@ -73,6 +74,9 @@ css =
         fontSize $ em 0.75
         element "a" ? do
           color Theme.gold
+      ((star & byClass footerLinksClass) |> star) |+ star ? do
+        display inlineBlock
+        marginLeft $ em 0.75
 
 data Query a = Navigate (Maybe Route) a
 
@@ -124,9 +128,16 @@ component =
       , HH.footer
         [ HP.class_ footerClass ]
         [ HH.div_ [HH.text "Copyright © 2022 PureScript Domains"]
-        , case route of
-            Just Terms -> HH.div_ []
-            _ -> HH.a [HP.href $ "#" <> Route.print Terms] [HH.text "Terms and Conditions"]
+        , HH.div
+          [ HP.class_ footerLinksClass ] $
+          (filter (const $ route /= Just Terms) [HH.a [HP.href $ "#" <> Route.print Terms] [HH.text "Terms and Conditions"]]) <>
+          [ HH.a
+            [HP.href "https://github.com/purescript-domains", HP.target "_blank"]
+            [HH.text "GitHub"]
+          , HH.a
+            [HP.href "https://twitter.com/pursdomains", HP.target "_blank"]
+            [HH.text "Twitter"]
+          ]
         ]
       ]
 
