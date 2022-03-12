@@ -1,15 +1,19 @@
 .app__container { width: 96.0vw; max-width: 740.0px; margin: 8.0vh auto 8.0vh auto; background-color: hsl(221.54, 19.4%, 13.14%); color: hsl(0.0, 0.0%, 100.0%) }
 .app__container > * + * { margin-top: 4.0vh }
-.app__header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap }
-.app__header > * { white-space: nowrap }
+.app__header { display: flex; align-items: center; white-space: nowrap }
+.app__header--narrow { flex-direction: column }
+.app__header-spacer { flex-grow: 1.0; height: 0.5em }
 .app__heading-link { text-decoration: none; color: hsl(0.0, 0.0%, 100.0%) }
 .app__heading { position: relative; margin: 0 0.5em 0 0; font-family: "Montserrat", sans-serif; font-size: 2.5em; font-weight: normal; text-transform: uppercase; line-height: 1.0 }
 .app__dot { display: inline-block; transform: translateY(-0.6em) scale(2.0, 2.0); margin-right: 0.125em; margin-left: 0.125em; color: hsl(38.1, 57.32%, 46.86%) }
 .app__support-button { height: 2.5em; display: flex; align-items: center }
 .app__support-button > * + * { margin-left: 0.5em }
-.app__footer { display: flex; justify-content: space-between; font-family: "Roboto", sans-serif; font-size: 0.75em }
+.app__footer { display: flex; align-items: center; font-family: "Roboto", sans-serif; font-size: 0.75em; white-space: nowrap }
 .app__footer a { color: hsl(38.1, 57.32%, 46.86%) }
-.app__footer-links > * + * { display: inline-block; margin-left: 0.75em }
+.app__footer-spacer { flex-grow: 1.0; height: 1.0em }
+.app__footer > * { display: inline-block }
+.app__footer--narrow { flex-direction: column; text-align: center }
+.app__footer-links > * + * { display: inline-block; margin-left: 0.5em }
 .home__intro { font-size: 1.25em }
 .home > * + * { margin-top: 4.0vh }
 .prose { font-family: "Roboto", sans-serif; line-height: 1.5 }
