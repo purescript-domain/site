@@ -2,13 +2,11 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, alignItems, backgroundColor, color, column, display, element, em, flex, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, height, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, spaceBetween, star, textDecoration, textTransform, textWhitespace, transforms, vh, vw, white, whitespaceNoWrap, width, wrap, (&), (?), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, color, column, display, element, em, flex, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, height, inlineBlock, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, star, textDecoration, textTransform, textWhitespace, transforms, vh, vw, white, whitespaceNoWrap, width, (&), (?), (|+), (|>))
 import CSS as CSS
 import CSS.Common (auto, center, normal)
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
-import CSS.TextAlign (textAlign)
-import CSS.TextAlign as TextAlign
 import CSS.Transform (scale, translateY)
 import Control.Monad.Reader.Class (class MonadAsk)
 import Data.Array ((:), filter, find)
@@ -107,7 +105,6 @@ css =
         display inlineBlock
       star & byClass footerNarrowClass ? do
         flexDirection column
-        textAlign TextAlign.center
       ((star & byClass footerLinksClass) |> star) |+ star ? do
         display inlineBlock
         marginLeft $ em 0.5
