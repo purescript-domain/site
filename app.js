@@ -12887,68 +12887,73 @@ var PS = {};
   var _footer = Type_Proxy["Proxy"].value;
   var component = function (dictMonadAsk) {
       return function (dictMonadEffect) {
+          var pages = [ new Data_Tuple.Tuple(new Data_Maybe.Just(Domains_Site_Route.Home.value), Domains_Site_Home.component(dictMonadAsk)(dictMonadEffect)), new Data_Tuple.Tuple(new Data_Maybe.Just(Domains_Site_Route.Terms.value), Domains_Site_Terms.component(dictMonadAsk)(dictMonadEffect)) ];
+          var notFound = new Data_Tuple.Tuple(Data_Maybe.Nothing.value, Domains_Site_NotFound.component);
+          var header = Halogen_Hooks_Component.component(function (v) {
+              return function (route) {
+                  return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (headerMeasure) {
+                      return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (headingMeasure) {
+                          return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (buttonsMeasure) {
+                              return Halogen_Hooks_Hook.pure((function () {
+                                  var v1 = Control_Apply.apply(Data_Maybe.applyMaybe)(Control_Apply.apply(Data_Maybe.applyMaybe)(Data_Functor.map(Data_Maybe.functorMaybe)(Data_Tuple_Nested.tuple3)(headerMeasure))(headingMeasure))(buttonsMeasure);
+                                  if (v1 instanceof Data_Maybe.Nothing) {
+                                      return Halogen_HTML_Elements.header_([  ]);
+                                  };
+                                  if (v1 instanceof Data_Maybe.Just) {
+                                      var v2 = Data_Tuple_Nested.get1(v1.value0);
+                                      var v3 = Data_Tuple_Nested.get2(v1.value0);
+                                      var v4 = Data_Tuple_Nested.get3(v1.value0);
+                                      return Halogen_HTML_Elements.header([ Halogen_HTML_Properties.ref(v2.value0), Halogen_HTML_Properties.classes(Data_Array.cons(headerClass)(Data_Array.filter(Data_Function["const"](v2.value1.width < v3.value1.width + v4.value1.width))([ headerNarrowClass ]))) ])([ (function () {
+                                          var logo = Halogen_HTML_Elements.h1([ Halogen_HTML_Properties.ref(v3.value0), Halogen_HTML_Properties.class_(headingClass) ])([ Halogen_HTML_Core.text("purescri"), Halogen_HTML_Elements.span([ Halogen_HTML_Properties.class_(dotClass) ])([ Halogen_HTML_Core.text(".") ]), Halogen_HTML_Core.text("pt") ]);
+                                          if (route instanceof Data_Maybe.Just && route.value0 instanceof Domains_Site_Route.Home) {
+                                              return logo;
+                                          };
+                                          return Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href(Domains_Site_Route.print(Domains_Site_Route.Home.value)), Halogen_HTML_Properties.class_(headingLinkClass) ])([ logo ]);
+                                      })(), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_(headerSpacerClass) ])([  ]), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.ref(v4.value0), Halogen_HTML_Properties.class_(supportButtonsClass) ])(Data_Functor.map(Data_Functor.functorArray)(function (x) {
+                                          return Halogen_HTML_Elements.div_([ x ]);
+                                      })([ Domains_Site_SupportButton.supportButton("https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt")("./twitter.svg")("Share"), Domains_Site_SupportButton.supportButton("https://github.com/purescript-domains/dns")("./github.svg")("Star"), Domains_Site_SupportButton.supportButton("https://github.com/sponsors/purescript-domains")("./sponsor.svg")("Sponsor") ])) ]);
+                                  };
+                                  throw new Error("Failed pattern match at Domains.Site.App (line 159, column 7 - line 199, column 16): " + [ v1.constructor.name ]);
+                              })());
+                          });
+                      });
+                  });
+              };
+          });
+          var handleQuery = function (v) {
+              return Control_Bind.discard(Control_Bind.discardUnit)(Halogen_Query_HalogenM.bindHalogenM)(Control_Monad_State_Class.put(Halogen_Query_HalogenM.monadStateHalogenM)(v.value0))(function () {
+                  return Control_Applicative.pure(Halogen_Query_HalogenM.applicativeHalogenM)(new Data_Maybe.Just(v.value1));
+              });
+          };
+          var footer = Halogen_Hooks_Component.component(function (v) {
+              return function (route) {
+                  return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (footerMeasure) {
+                      return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (copyrightMeasure) {
+                          return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (linksMeasure) {
+                              return Halogen_Hooks_Hook.pure((function () {
+                                  var v1 = Control_Apply.apply(Data_Maybe.applyMaybe)(Control_Apply.apply(Data_Maybe.applyMaybe)(Data_Functor.map(Data_Maybe.functorMaybe)(Data_Tuple_Nested.tuple3)(footerMeasure))(copyrightMeasure))(linksMeasure);
+                                  if (v1 instanceof Data_Maybe.Nothing) {
+                                      return Halogen_HTML_Elements.footer_([  ]);
+                                  };
+                                  if (v1 instanceof Data_Maybe.Just) {
+                                      var v2 = Data_Tuple_Nested.get1(v1.value0);
+                                      var v3 = Data_Tuple_Nested.get2(v1.value0);
+                                      var v4 = Data_Tuple_Nested.get3(v1.value0);
+                                      return Halogen_HTML_Elements.footer([ Halogen_HTML_Properties.ref(v2.value0), Halogen_HTML_Properties.classes(Data_Array.cons(footerClass)(Data_Array.filter(Data_Function["const"](v2.value1.width < v3.value1.width + v4.value1.width))([ footerNarrowClass ]))) ])([ Halogen_HTML_Elements.div([ Halogen_HTML_Properties.ref(v3.value0) ])([ Halogen_HTML_Core.text("Copyright \xa9 2022 PureScript Domains") ]), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_(footerSpacerClass) ])([  ]), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.ref(v4.value0), Halogen_HTML_Properties.class_(footerLinksClass) ])(Data_Semigroup.append(Data_Semigroup.semigroupArray)(Data_Array.filter(Data_Function["const"](Data_Eq.notEq(Data_Maybe.eqMaybe(Domains_Site_Route.eqRoute))(route)(new Data_Maybe.Just(Domains_Site_Route.Terms.value))))([ Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("#" + Domains_Site_Route.print(Domains_Site_Route.Terms.value)) ])([ Halogen_HTML_Core.text("Terms and Conditions") ]) ]))([ Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("https://github.com/purescript-domains"), Halogen_HTML_Properties.target("_blank") ])([ Halogen_HTML_Core.text("GitHub") ]), Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("https://twitter.com/pursdomains"), Halogen_HTML_Properties.target("_blank") ])([ Halogen_HTML_Core.text("Twitter") ]) ])) ]);
+                                  };
+                                  throw new Error("Failed pattern match at Domains.Site.App (line 206, column 7 - line 229, column 16): " + [ v1.constructor.name ]);
+                              })());
+                          });
+                      });
+                  });
+              };
+          });
           var render = function (route) {
-              var pages = [ new Data_Tuple.Tuple(new Data_Maybe.Just(Domains_Site_Route.Home.value), Domains_Site_Home.component(dictMonadAsk)(dictMonadEffect)), new Data_Tuple.Tuple(new Data_Maybe.Just(Domains_Site_Route.Terms.value), Domains_Site_Terms.component(dictMonadAsk)(dictMonadEffect)) ];
-              var notFound = new Data_Tuple.Tuple(Data_Maybe.Nothing.value, Domains_Site_NotFound.component);
-              var header = Halogen_Hooks_Component.component(function (v) {
-                  return function (v1) {
-                      return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (headerMeasure) {
-                          return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (headingMeasure) {
-                              return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (buttonsMeasure) {
-                                  return Halogen_Hooks_Hook.pure((function () {
-                                      var v2 = Control_Apply.apply(Data_Maybe.applyMaybe)(Control_Apply.apply(Data_Maybe.applyMaybe)(Data_Functor.map(Data_Maybe.functorMaybe)(Data_Tuple_Nested.tuple3)(headerMeasure))(headingMeasure))(buttonsMeasure);
-                                      if (v2 instanceof Data_Maybe.Nothing) {
-                                          return Halogen_HTML_Elements.header_([  ]);
-                                      };
-                                      if (v2 instanceof Data_Maybe.Just) {
-                                          var v3 = Data_Tuple_Nested.get1(v2.value0);
-                                          var v4 = Data_Tuple_Nested.get2(v2.value0);
-                                          var v5 = Data_Tuple_Nested.get3(v2.value0);
-                                          return Halogen_HTML_Elements.header([ Halogen_HTML_Properties.ref(v3.value0), Halogen_HTML_Properties.classes(Data_Array.cons(headerClass)(Data_Array.filter(Data_Function["const"](v3.value1.width < v4.value1.width + v5.value1.width))([ headerNarrowClass ]))) ])([ (function () {
-                                              var logo = Halogen_HTML_Elements.h1([ Halogen_HTML_Properties.ref(v4.value0), Halogen_HTML_Properties.class_(headingClass) ])([ Halogen_HTML_Core.text("purescri"), Halogen_HTML_Elements.span([ Halogen_HTML_Properties.class_(dotClass) ])([ Halogen_HTML_Core.text(".") ]), Halogen_HTML_Core.text("pt") ]);
-                                              if (route instanceof Data_Maybe.Just && route.value0 instanceof Domains_Site_Route.Home) {
-                                                  return logo;
-                                              };
-                                              return Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href(Domains_Site_Route.print(Domains_Site_Route.Home.value)), Halogen_HTML_Properties.class_(headingLinkClass) ])([ logo ]);
-                                          })(), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_(headerSpacerClass) ])([  ]), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.ref(v5.value0), Halogen_HTML_Properties.class_(supportButtonsClass) ])(Data_Functor.map(Data_Functor.functorArray)(function (x) {
-                                              return Halogen_HTML_Elements.div_([ x ]);
-                                          })([ Domains_Site_SupportButton.supportButton("https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt")("./twitter.svg")("Share"), Domains_Site_SupportButton.supportButton("https://github.com/purescript-domains/dns")("./github.svg")("Star"), Domains_Site_SupportButton.supportButton("https://github.com/sponsors/purescript-domains")("./sponsor.svg")("Sponsor") ])) ]);
-                                      };
-                                      throw new Error("Failed pattern match at Domains.Site.App (line 161, column 9 - line 201, column 18): " + [ v2.constructor.name ]);
-                                  })());
-                              });
-                          });
-                      });
-                  };
-              });
-              var footer = Halogen_Hooks_Component.component(function (v) {
-                  return function (v1) {
-                      return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (footerMeasure) {
-                          return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (copyrightMeasure) {
-                              return Halogen_Hooks_Hook.bind(Domains_Site_Measure.useMeasure(dictMonadEffect))(function (linksMeasure) {
-                                  return Halogen_Hooks_Hook.pure((function () {
-                                      var v2 = Control_Apply.apply(Data_Maybe.applyMaybe)(Control_Apply.apply(Data_Maybe.applyMaybe)(Data_Functor.map(Data_Maybe.functorMaybe)(Data_Tuple_Nested.tuple3)(footerMeasure))(copyrightMeasure))(linksMeasure);
-                                      if (v2 instanceof Data_Maybe.Nothing) {
-                                          return Halogen_HTML_Elements.footer_([  ]);
-                                      };
-                                      if (v2 instanceof Data_Maybe.Just) {
-                                          var v3 = Data_Tuple_Nested.get1(v2.value0);
-                                          var v4 = Data_Tuple_Nested.get2(v2.value0);
-                                          var v5 = Data_Tuple_Nested.get3(v2.value0);
-                                          return Halogen_HTML_Elements.footer([ Halogen_HTML_Properties.ref(v3.value0), Halogen_HTML_Properties.classes(Data_Array.cons(footerClass)(Data_Array.filter(Data_Function["const"](v3.value1.width < v4.value1.width + v5.value1.width))([ footerNarrowClass ]))) ])([ Halogen_HTML_Elements.div([ Halogen_HTML_Properties.ref(v4.value0) ])([ Halogen_HTML_Core.text("Copyright \xa9 2022 PureScript Domains") ]), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_(footerSpacerClass) ])([  ]), Halogen_HTML_Elements.div([ Halogen_HTML_Properties.ref(v5.value0), Halogen_HTML_Properties.class_(footerLinksClass) ])(Data_Semigroup.append(Data_Semigroup.semigroupArray)(Data_Array.filter(Data_Function["const"](Data_Eq.notEq(Data_Maybe.eqMaybe(Domains_Site_Route.eqRoute))(route)(new Data_Maybe.Just(Domains_Site_Route.Terms.value))))([ Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("#" + Domains_Site_Route.print(Domains_Site_Route.Terms.value)) ])([ Halogen_HTML_Core.text("Terms and Conditions") ]) ]))([ Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("https://github.com/purescript-domains"), Halogen_HTML_Properties.target("_blank") ])([ Halogen_HTML_Core.text("GitHub") ]), Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("https://twitter.com/pursdomains"), Halogen_HTML_Properties.target("_blank") ])([ Halogen_HTML_Core.text("Twitter") ]) ])) ]);
-                                      };
-                                      throw new Error("Failed pattern match at Domains.Site.App (line 208, column 9 - line 231, column 18): " + [ v2.constructor.name ]);
-                                  })());
-                              });
-                          });
-                      });
-                  };
-              });
               return Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_(containerClass) ])([ Halogen_HTML.slot_()({
                   reflectSymbol: function () {
                       return "header";
                   }
-              })(Data_Ord.ordUnit)(_header)(Data_Unit.unit)(header)(Data_Unit.unit), Halogen_HTML_Elements.main_([ Data_Tuple.uncurry(Halogen_HTML.slot_()({
+              })(Data_Ord.ordUnit)(_header)(Data_Unit.unit)(header)(route), Halogen_HTML_Elements.main_([ Data_Tuple.uncurry(Halogen_HTML.slot_()({
                   reflectSymbol: function () {
                       return "main";
                   }
@@ -12958,12 +12963,7 @@ var PS = {};
                   reflectSymbol: function () {
                       return "footer";
                   }
-              })(Data_Ord.ordUnit)(_footer)(Data_Unit.unit)(footer)(Data_Unit.unit) ]);
-          };
-          var handleQuery = function (v) {
-              return Control_Bind.discard(Control_Bind.discardUnit)(Halogen_Query_HalogenM.bindHalogenM)(Control_Monad_State_Class.put(Halogen_Query_HalogenM.monadStateHalogenM)(v.value0))(function () {
-                  return Control_Applicative.pure(Halogen_Query_HalogenM.applicativeHalogenM)(new Data_Maybe.Just(v.value1));
-              });
+              })(Data_Ord.ordUnit)(_footer)(Data_Unit.unit)(footer)(route) ]);
           };
           return Halogen_Component.mkComponent({
               initialState: Data_Function["const"](Data_Maybe.Nothing.value),
