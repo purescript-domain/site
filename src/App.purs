@@ -144,95 +144,93 @@ component =
   render route =
     HH.div
       [ HP.class_ containerClass ]
-      [ HH.slot_ _header unit header unit
+      [ HH.slot_ _header unit header route
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]
-      , HH.slot_ _footer unit footer unit
+      , HH.slot_ _footer unit footer route
       ]
 
-    where
-
-    header = Hooks.component \_ _ -> Hooks.do
-      headerMeasure <- useMeasure
-      headingMeasure <- useMeasure
-      buttonsMeasure <- useMeasure
-      Hooks.pure $
-        case tuple3 <$> headerMeasure <*> headingMeasure <*> buttonsMeasure of
-          Nothing ->
-            HH.header_ []
-          Just measures ->
-            let
-              headerRef /\ headerRect = get1 measures
-              headingRef /\ headingRect = get2 measures
-              buttonsRef /\ buttonsRect = get3 measures
-            in
-              HH.header
-                [ HP.ref headerRef, HP.classes $ headerClass : filter (const $ headerRect.width < headingRect.width + buttonsRect.width) [ headerNarrowClass ] ] $
-                [ let
-                    logo =
-                      HH.h1
-                        [ HP.ref headingRef, HP.class_ headingClass ]
-                        [ HH.text "purescri"
-                        , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
-                        , HH.text "pt"
-                        ]
-                  in
-                    case route of
-                      Just Home -> logo
-                      _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [ logo ]
-                , HH.div [ HP.class_ headerSpacerClass ] []
-                , HH.div
-                    [ HP.ref buttonsRef, HP.class_ supportButtonsClass ] $
-                    (\x -> HH.div_ [ x ]) <$>
-                      [ supportButton
-                          "https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt"
-                          "./twitter.svg"
-                          "Share"
-                      , supportButton
-                          "https://github.com/purescript-domains/dns"
-                          "./github.svg"
-                          "Star"
-                      , supportButton
-                          "https://github.com/sponsors/purescript-domains"
-                          "./sponsor.svg"
-                          "Sponsor"
+  header = Hooks.component \_ route -> Hooks.do
+    headerMeasure <- useMeasure
+    headingMeasure <- useMeasure
+    buttonsMeasure <- useMeasure
+    Hooks.pure $
+      case tuple3 <$> headerMeasure <*> headingMeasure <*> buttonsMeasure of
+        Nothing ->
+          HH.header_ []
+        Just measures ->
+          let
+            headerRef /\ headerRect = get1 measures
+            headingRef /\ headingRect = get2 measures
+            buttonsRef /\ buttonsRect = get3 measures
+          in
+            HH.header
+              [ HP.ref headerRef, HP.classes $ headerClass : filter (const $ headerRect.width < headingRect.width + buttonsRect.width) [ headerNarrowClass ] ] $
+              [ let
+                  logo =
+                    HH.h1
+                      [ HP.ref headingRef, HP.class_ headingClass ]
+                      [ HH.text "purescri"
+                      , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
+                      , HH.text "pt"
                       ]
-                ]
+                in
+                  case route of
+                    Just Home -> logo
+                    _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [ logo ]
+              , HH.div [ HP.class_ headerSpacerClass ] []
+              , HH.div
+                  [ HP.ref buttonsRef, HP.class_ supportButtonsClass ] $
+                  (\x -> HH.div_ [ x ]) <$>
+                    [ supportButton
+                        "https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt"
+                        "./twitter.svg"
+                        "Share"
+                    , supportButton
+                        "https://github.com/purescript-domains/dns"
+                        "./github.svg"
+                        "Star"
+                    , supportButton
+                        "https://github.com/sponsors/purescript-domains"
+                        "./sponsor.svg"
+                        "Sponsor"
+                    ]
+              ]
 
-    footer = Hooks.component \_ _ -> Hooks.do
-      footerMeasure <- useMeasure
-      copyrightMeasure <- useMeasure
-      linksMeasure <- useMeasure
-      Hooks.pure $
-        case tuple3 <$> footerMeasure <*> copyrightMeasure <*> linksMeasure of
-          Nothing ->
-            HH.footer_ []
-          Just measures ->
-            let
-              footerRef /\ footerRect = get1 measures
-              copyrightRef /\ copyrightRect = get2 measures
-              linksRef /\ linksRect = get3 measures
-            in
-              HH.footer
-                [ HP.ref footerRef, HP.classes $ footerClass : filter (const $ footerRect.width < copyrightRect.width + linksRect.width) [ footerNarrowClass ] ]
-                [ HH.div [ HP.ref copyrightRef ] [ HH.text "Copyright © 2022 PureScript Domains" ]
-                , HH.div [ HP.class_ footerSpacerClass ] []
-                , HH.div
-                    [ HP.ref linksRef, HP.class_ footerLinksClass ] $
-                    (filter (const $ route /= Just Terms) [ HH.a [ HP.href $ "#" <> Route.print Terms ] [ HH.text "Terms and Conditions" ] ]) <>
-                      [ HH.a
-                          [ HP.href "https://github.com/purescript-domains", HP.target "_blank" ]
-                          [ HH.text "GitHub" ]
-                      , HH.a
-                          [ HP.href "https://twitter.com/pursdomains", HP.target "_blank" ]
-                          [ HH.text "Twitter" ]
-                      ]
-                ]
+  footer = Hooks.component \_ route -> Hooks.do
+    footerMeasure <- useMeasure
+    copyrightMeasure <- useMeasure
+    linksMeasure <- useMeasure
+    Hooks.pure $
+      case tuple3 <$> footerMeasure <*> copyrightMeasure <*> linksMeasure of
+        Nothing ->
+          HH.footer_ []
+        Just measures ->
+          let
+            footerRef /\ footerRect = get1 measures
+            copyrightRef /\ copyrightRect = get2 measures
+            linksRef /\ linksRect = get3 measures
+          in
+            HH.footer
+              [ HP.ref footerRef, HP.classes $ footerClass : filter (const $ footerRect.width < copyrightRect.width + linksRect.width) [ footerNarrowClass ] ]
+              [ HH.div [ HP.ref copyrightRef ] [ HH.text "Copyright © 2022 PureScript Domains" ]
+              , HH.div [ HP.class_ footerSpacerClass ] []
+              , HH.div
+                  [ HP.ref linksRef, HP.class_ footerLinksClass ] $
+                  (filter (const $ route /= Just Terms) [ HH.a [ HP.href $ "#" <> Route.print Terms ] [ HH.text "Terms and Conditions" ] ]) <>
+                    [ HH.a
+                        [ HP.href "https://github.com/purescript-domains", HP.target "_blank" ]
+                        [ HH.text "GitHub" ]
+                    , HH.a
+                        [ HP.href "https://twitter.com/pursdomains", HP.target "_blank" ]
+                        [ HH.text "Twitter" ]
+                    ]
+              ]
 
-    pages =
-      [ Just Home /\ Home.component
-      , Just Terms /\ Terms.component
-      ]
+  pages =
+    [ Just Home /\ Home.component
+    , Just Terms /\ Terms.component
+    ]
 
-    notFound = Nothing /\ NotFound.component
+  notFound = Nothing /\ NotFound.component
