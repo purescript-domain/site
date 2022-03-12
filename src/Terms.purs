@@ -17,11 +17,11 @@ terms =
 PureScript Domains is a free domain service (the "Service") owned and operated
 by Nicholas Saunders (hereafter "we", "our", or "us"). The registration method
 is to submit via
-[pull request](https://github.com/purescript-domains/dns/compare) to the
-_purescript-domains/dns_ GitHub repository a record (the "Record") that includes
-a subdomain (the "Subdomain") selected according to the Name Policy described
-herein. The pull request requires the submitter (hereafter "you" or "your") to
-acknowledge and to accept these Terms and Conditions (hereafter the
+[pull request](https://github.com/purescript-domains/dns/edit/main/domains.yml)
+to the _purescript-domains/dns_ GitHub repository a record (the "Record") that
+includes a subdomain (the "Subdomain") selected according to the Name Policy
+described herein. The pull request requires the submitter (hereafter "you" or
+"your") to acknowledge and to accept these Terms and Conditions (hereafter the
 "Agreement").
 
 ### Rights and responsibilities
@@ -104,7 +104,9 @@ the state or federal courts of Maricopa County, Arizona.
 
 We reserve the right to alter the Agreement at any time, at our sole discretion,
 without notice. You may return to this page periodically to review the current
-version of the Agreement or monitor commit history here on GitHub.
+version of the Agreement or
+[monitor commit history](https://github.com/purescript-domains/site/commits/main/src/Terms.purs)
+on GitHub.
 
 Continued use of the Service after changes to the Agreement indicates that you
 are bound by those changes. However, you can discontinue your use of the Service
