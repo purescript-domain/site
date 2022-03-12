@@ -72,8 +72,8 @@ step4Content =
   """
 Now it's time to register your domain by adding it to
 [this list](https://github.com/purescript-domains/dns/edit/main/domains.yml).
-You can edit the file right in your browser and then follow the options at the
-bottom of the form to submit a pull request.
+You can edit the file right in your browser and then click the _Propose changes_
+button to submit a pull request.
 
 Please keep an eye on your pull request in case we have any questions.
 Otherwise, your registration will be processed immediately once merged. Keep in
