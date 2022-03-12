@@ -23,35 +23,36 @@ css :: StyleM Unit
 css =
   let
     byClass (ClassName c) = CSS.byClass c
-  in do
-    star & byClass rootClass ? do
-      border solid nil black
-      outline solid nil black
-      background black
-      color white
-      margin nil nil nil nil
-      padding nil nil nil nil
-      uncurry fontFamily Theme.roboto
-      fontSize inherit
-      lineHeight $ unitless 1.0
-      textDecoration noneTextDecoration
-      display inlineFlex
-      alignItems center
-    (star & byClass rootClass) & pseudo "focus" ? do
-      boxShadow $ singleton $ bsColor Theme.gold $ bsInset $ shadowWithSpread nil nil nil $ px 1.0
-    star & byClass iconWrapClass ? do
-      width $ em 1.5
-      height $ em 1.5
-      background Theme.gold
-      display inlineFlex
-      alignItems center
-      justifyContent center
-    star & byClass iconClass ? do
-      width $ em 1.0
-      height $ em 1.0
-    star & byClass labelClass ? do
-      paddingRight $ em 0.5
-      paddingLeft $ em 0.5
+  in
+    do
+      star & byClass rootClass ? do
+        border solid nil black
+        outline solid nil black
+        background black
+        color white
+        margin nil nil nil nil
+        padding nil nil nil nil
+        uncurry fontFamily Theme.roboto
+        fontSize inherit
+        lineHeight $ unitless 1.0
+        textDecoration noneTextDecoration
+        display inlineFlex
+        alignItems center
+      (star & byClass rootClass) & pseudo "focus" ? do
+        boxShadow $ singleton $ bsColor Theme.gold $ bsInset $ shadowWithSpread nil nil nil $ px 1.0
+      star & byClass iconWrapClass ? do
+        width $ em 1.5
+        height $ em 1.5
+        background Theme.gold
+        display inlineFlex
+        alignItems center
+        justifyContent center
+      star & byClass iconClass ? do
+        width $ em 1.0
+        height $ em 1.0
+      star & byClass labelClass ? do
+        paddingRight $ em 0.5
+        paddingLeft $ em 0.5
 
 type URL = String
 
@@ -62,12 +63,12 @@ type Label = String
 supportButton :: forall p i. URL -> ImageURL -> Label -> HH.HTML p i
 supportButton url imageURL label =
   HH.a
-    [HP.href url, HP.target "_blank", HP.class_ rootClass]
+    [ HP.href url, HP.target "_blank", HP.class_ rootClass ]
     [ HH.div
-      [ HP.class_ iconWrapClass ]
-      [ HH.img [ HP.class_ iconClass, HP.src imageURL, HP.alt "" ]
-      ]
+        [ HP.class_ iconWrapClass ]
+        [ HH.img [ HP.class_ iconClass, HP.src imageURL, HP.alt "" ]
+        ]
     , HH.div
-      [HP.class_ labelClass]
-      [HH.text label]
+        [ HP.class_ labelClass ]
+        [ HH.text label ]
     ]

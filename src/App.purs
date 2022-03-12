@@ -2,18 +2,21 @@ module Domains.Site.App where
 
 import Prelude
 
-import CSS (StyleM, alignItems, backgroundColor, color, display, element, em, flex, flexBasis, flexWrap, fontFamily, fontSize, fontWeight, height, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, pct, position, pseudo, px, relative, spaceBetween, star, textDecoration, textTransform, textWhitespace, transforms, vh, vw, white, whitespaceNoWrap, width, wrap, (&), (?), (|+), (|>))
+import CSS (StyleM, alignItems, backgroundColor, color, column, display, element, em, flex, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, height, inlineBlock, justifyContent, lineHeight, margin, marginLeft, marginRight, marginTop, maxWidth, nil, noneTextDecoration, position, px, relative, spaceBetween, star, textDecoration, textTransform, textWhitespace, transforms, vh, vw, white, whitespaceNoWrap, width, wrap, (&), (?), (|+), (|>))
 import CSS as CSS
 import CSS.Common (auto, center, normal)
 import CSS.Size (unitless)
 import CSS.Text.Transform (uppercase)
+import CSS.TextAlign (textAlign)
+import CSS.TextAlign as TextAlign
 import CSS.Transform (scale, translateY)
 import Control.Monad.Reader.Class (class MonadAsk)
-import Data.Array (filter, find)
+import Data.Array ((:), filter, find)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (uncurry)
-import Data.Tuple.Nested ((/\))
+import Data.Tuple.Nested (get1, get2, get3, tuple3, (/\))
 import Domains.Site.Home as Home
+import Domains.Site.Measure (useMeasure)
 import Domains.Site.NotFound as NotFound
 import Domains.Site.Route (Route(..))
 import Domains.Site.Route as Route
@@ -26,15 +29,20 @@ import Halogen (ClassName(..))
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
+import Halogen.Hooks as Hooks
 import MarkdownIt (MarkdownIt)
 import Type.Prelude (Proxy(..))
 
 containerClass = ClassName "app__container" :: ClassName
 headerClass = ClassName "app__header" :: ClassName
+headerNarrowClass = ClassName "app__header--narrow" :: ClassName
+headerSpacerClass = ClassName "app__header-spacer" :: ClassName
 headingLinkClass = ClassName "app__heading-link" :: ClassName
 headingClass = ClassName "app__heading" :: ClassName
 dotClass = ClassName "app__dot" :: ClassName
 footerClass = ClassName "app__footer" :: ClassName
+footerNarrowClass = ClassName "app__footer--narrow" :: ClassName
+footerSpacerClass = ClassName "app__footer-spacer" :: ClassName
 footerLinksClass = ClassName "app__footer-links" :: ClassName
 supportButtonsClass = ClassName "app__support-button" :: ClassName
 
@@ -55,10 +63,12 @@ css =
       star & byClass headerClass ? do
         display flex
         alignItems center
-        justifyContent spaceBetween
-        flexWrap wrap
-      (star & byClass headerClass) |> star ? do
         textWhitespace whitespaceNoWrap
+      star & byClass headerNarrowClass ? do
+        flexDirection column
+      star & byClass headerSpacerClass ? do
+        flexGrow 1.0
+        height $ em 0.5
       star & byClass headingLinkClass ? do
         textDecoration noneTextDecoration
         color white
@@ -84,20 +94,35 @@ css =
         marginLeft $ em 0.5
       star & byClass footerClass ? do
         display flex
-        justifyContent spaceBetween
+        alignItems center
         uncurry fontFamily Theme.roboto
         fontSize $ em 0.75
+        textWhitespace whitespaceNoWrap
         element "a" ? do
           color Theme.gold
+      star & byClass footerSpacerClass ? do
+        flexGrow 1.0
+        height $ em 1.0
+      (star & byClass footerClass) |> star ? do
+        display inlineBlock
+      star & byClass footerNarrowClass ? do
+        flexDirection column
+        textAlign TextAlign.center
       ((star & byClass footerLinksClass) |> star) |+ star ? do
         display inlineBlock
-        marginLeft $ em 0.75
+        marginLeft $ em 0.5
 
 data Query a = Navigate (Maybe Route) a
 
-type Slots = (main :: forall q. H.Slot q Void (Maybe Route))
+type Slots =
+  ( header :: forall q. H.Slot q Void Unit
+  , main :: forall q. H.Slot q Void (Maybe Route)
+  , footer :: forall q. H.Slot q Void Unit
+  )
 
+_header = Proxy :: Proxy "header"
 _main = Proxy :: Proxy "main"
+_footer = Proxy :: Proxy "footer"
 
 component
   :: forall r i o m
@@ -122,57 +147,91 @@ component =
   render route =
     HH.div
       [ HP.class_ containerClass ]
-      [ HH.header
-          [ HP.class_ headerClass ] $
-          [ let
-              logo =
-                HH.h1
-                  [ HP.class_ headingClass ]
-                  [ HH.text "purescri"
-                  , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
-                  , HH.text "pt"
-                  ]
-            in
-              case route of
-                Just Home -> logo
-                _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [logo]
-          , HH.div
-            [HP.class_ supportButtonsClass] $
-            (\x -> HH.div_ [x]) <$>
-              [ supportButton
-                  "https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt"
-                  "./twitter.svg"
-                  "Share"
-              , supportButton
-                  "https://github.com/purescript-domains/dns"
-                  "./github.svg"
-                  "Star"
-              , supportButton
-                  "https://github.com/sponsors/purescript-domains"
-                  "./sponsor.svg"
-                  "Sponsor"
-              ]
-          ]
+      [ HH.slot_ _header unit header unit
       , HH.main_
           [ unit # uncurry (HH.slot_ _main) (fromMaybe notFound $ find (\(route' /\ _) -> route == route') pages)
           ]
-      , HH.footer
-          [ HP.class_ footerClass ]
-          [ HH.div_ [ HH.text "Copyright © 2022 PureScript Domains" ]
-          , HH.div
-              [ HP.class_ footerLinksClass ] $
-              (filter (const $ route /= Just Terms) [ HH.a [ HP.href $ "#" <> Route.print Terms ] [ HH.text "Terms and Conditions" ] ]) <>
-                [ HH.a
-                    [ HP.href "https://github.com/purescript-domains", HP.target "_blank" ]
-                    [ HH.text "GitHub" ]
-                , HH.a
-                    [ HP.href "https://twitter.com/pursdomains", HP.target "_blank" ]
-                    [ HH.text "Twitter" ]
-                ]
-          ]
+      , HH.slot_ _footer unit footer unit
       ]
 
     where
+
+    header = Hooks.component \_ _ -> Hooks.do
+      headerMeasure <- useMeasure
+      headingMeasure <- useMeasure
+      buttonsMeasure <- useMeasure
+      Hooks.pure $
+        case tuple3 <$> headerMeasure <*> headingMeasure <*> buttonsMeasure of
+          Nothing ->
+            HH.header_ []
+          Just measures ->
+            let
+              headerRef /\ headerRect = get1 measures
+              headingRef /\ headingRect = get2 measures
+              buttonsRef /\ buttonsRect = get3 measures
+            in
+              HH.header
+                [ HP.ref headerRef, HP.classes $ headerClass : filter (const $ headerRect.width < headingRect.width + buttonsRect.width) [ headerNarrowClass ] ] $
+                [ let
+                    logo =
+                      HH.h1
+                        [ HP.ref headingRef, HP.class_ headingClass ]
+                        [ HH.text "purescri"
+                        , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
+                        , HH.text "pt"
+                        ]
+                  in
+                    case route of
+                      Just Home -> logo
+                      _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [ logo ]
+                , HH.div [ HP.class_ headerSpacerClass ] []
+                , HH.div
+                    [ HP.ref buttonsRef, HP.class_ supportButtonsClass ] $
+                    (\x -> HH.div_ [ x ]) <$>
+                      [ supportButton
+                          "https://twitter.com/intent/tweet?url=https%3A%2F%2Fpurescri.pt"
+                          "./twitter.svg"
+                          "Share"
+                      , supportButton
+                          "https://github.com/purescript-domains/dns"
+                          "./github.svg"
+                          "Star"
+                      , supportButton
+                          "https://github.com/sponsors/purescript-domains"
+                          "./sponsor.svg"
+                          "Sponsor"
+                      ]
+                ]
+
+    footer = Hooks.component \_ _ -> Hooks.do
+      footerMeasure <- useMeasure
+      copyrightMeasure <- useMeasure
+      linksMeasure <- useMeasure
+      Hooks.pure $
+        case tuple3 <$> footerMeasure <*> copyrightMeasure <*> linksMeasure of
+          Nothing ->
+            HH.footer_ []
+          Just measures ->
+            let
+              footerRef /\ footerRect = get1 measures
+              copyrightRef /\ copyrightRect = get2 measures
+              linksRef /\ linksRect = get3 measures
+            in
+              HH.footer
+                [ HP.ref footerRef, HP.classes $ footerClass : filter (const $ footerRect.width < copyrightRect.width + linksRect.width) [ footerNarrowClass ] ]
+                [ HH.div [ HP.ref copyrightRef ] [ HH.text "Copyright © 2022 PureScript Domains" ]
+                , HH.div [ HP.class_ footerSpacerClass ] []
+                , HH.div
+                    [ HP.ref linksRef, HP.class_ footerLinksClass ] $
+                    (filter (const $ route /= Just Terms) [ HH.a [ HP.href $ "#" <> Route.print Terms ] [ HH.text "Terms and Conditions" ] ]) <>
+                      [ HH.a
+                          [ HP.href "https://github.com/purescript-domains", HP.target "_blank" ]
+                          [ HH.text "GitHub" ]
+                      , HH.a
+                          [ HP.href "https://twitter.com/pursdomains", HP.target "_blank" ]
+                          [ HH.text "Twitter" ]
+                      ]
+                ]
 
     pages =
       [ Just Home /\ Home.component

@@ -28,7 +28,9 @@
   , "transformers"
   , "tuples"
   , "typelevel-prelude"
+  , "uuid"
   , "web-html"
+  , "web-resize-observer"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs" ]
