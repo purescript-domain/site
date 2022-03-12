@@ -12,7 +12,7 @@
 .app__footer a { color: hsl(38.1, 57.32%, 46.86%) }
 .app__footer-spacer { flex-grow: 1.0; height: 1.0em }
 .app__footer > * { display: inline-block }
-.app__footer--narrow { flex-direction: column; text-align: center }
+.app__footer--narrow { flex-direction: column }
 .app__footer-links > * + * { display: inline-block; margin-left: 0.5em }
 .home__intro { font-size: 1.25em }
 .home > * + * { margin-top: 4.0vh }
