@@ -4,7 +4,7 @@
 .app__header--narrow { flex-direction: column }
 .app__header-spacer { flex-grow: 1.0; height: 0.5em }
 .app__heading-link { text-decoration: none; color: hsl(0.0, 0.0%, 100.0%) }
-.app__heading { position: relative; margin: 0 0.5em 0 0; font-family: "Montserrat", sans-serif; font-size: 2.5em; font-weight: normal; text-transform: uppercase; line-height: 1.0 }
+.app__heading { position: relative; margin: 0 0 0 0; font-family: "Montserrat", sans-serif; font-size: 2.5em; font-weight: normal; text-transform: uppercase; line-height: 1.0 }
 .app__dot { display: inline-block; transform: translateY(-0.6em) scale(2.0, 2.0); margin-right: 0.125em; margin-left: 0.125em; color: hsl(38.1, 57.32%, 46.86%) }
 .app__support-button { height: 2.5em; display: flex; align-items: center }
 .app__support-button > * + * { margin-left: 0.5em }
