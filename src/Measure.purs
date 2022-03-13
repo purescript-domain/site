@@ -39,13 +39,8 @@ useMeasure =
             $ fst >>> traverse_
                 \{ contentRect: { top, right, bottom, left, width, height } } ->
                   HS.notify listener $ Hooks.put rectId { top, right, bottom, left, width, height }
-          for_ refLabel $ Hooks.getHTMLElementRef >=> \el -> do
-            let
-              l = case refLabel of
-                Nothing -> "Nothing"
-                Just (RefLabel x) -> x
-            liftEffect $ Console.logShow $ l /\ isJust el
-            traverse_ (liftEffect <<< flip (flip ResizeObserver.observe {}) obs <<< HTMLElement.toElement) el
+          for_ refLabel $ Hooks.getHTMLElementRef >=>
+            traverse_ (liftEffect <<< flip (flip ResizeObserver.observe {}) obs <<< HTMLElement.toElement)
           subscription <- Hooks.subscribe emitter
           pure $ Just do
             Hooks.unsubscribe subscription

@@ -72,7 +72,7 @@ css =
         color white
       star & byClass headingClass ? do
         position relative
-        margin nil (em 0.5) nil nil
+        margin nil nil nil nil
         uncurry fontFamily Theme.montserrat
         fontSize $ em 2.5
         fontWeight normal
@@ -170,15 +170,18 @@ component =
               [ let
                   logo =
                     HH.h1
-                      [ HP.ref headingRef, HP.class_ headingClass ]
+                      [ HP.class_ headingClass ]
                       [ HH.text "purescri"
                       , HH.span [ HP.class_ dotClass ] [ HH.text "." ]
                       , HH.text "pt"
                       ]
                 in
-                  case route of
-                    Just Home -> logo
-                    _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [ logo ]
+                  HH.div
+                    [ HP.ref headingRef ]
+                    [ case route of
+                        Just Home -> logo
+                        _ -> HH.a [ HP.href $ Route.print Home, HP.class_ headingLinkClass ] [ logo ]
+                    ]
               , HH.div [ HP.class_ headerSpacerClass ] []
               , HH.div
                   [ HP.ref buttonsRef, HP.class_ supportButtonsClass ] $
