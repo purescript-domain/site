@@ -1,4 +1,4 @@
-> **Info**
+> **Warning**
 > The website has moved to the [purescript-domain](https://github.com/purescript-domain/purescript-domain) monorepo.
 
 # PureScript Domains
